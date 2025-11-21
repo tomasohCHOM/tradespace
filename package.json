@@ -4,12 +4,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 3000",
+    "start": "vite --port 3000",
     "build": "vite build && tsc",
     "serve": "vite preview",
-    "test": "vitest run",
-    "lint": "eslint",
-    "format": "prettier",
-    "check": "prettier --write . && eslint --fix"
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "all": "npm run lint:fix && npm run format:fix && npm run build"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",
