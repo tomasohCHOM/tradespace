@@ -8,7 +8,7 @@ export const Navbar: React.FC = () => {
         <a href="/">
           <div className="flex items-center gap-2">
             <img src="/logo.svg" alt="TradeSpace Logo" className="w-8" />
-            <span className="text-lg font-bold">TradeSpace</span>
+            <span className="md:text-lg font-bold">TradeSpace</span>
           </div>
         </a>
         <div className="flex items-center gap-2">

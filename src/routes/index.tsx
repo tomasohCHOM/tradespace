@@ -14,7 +14,7 @@ function LandingPage() {
   return (
     <div>
       <Navbar />
-      <main className="pt-36 pb-16 max-w-5xl mx-auto grid gap-24">
+      <main className="pt-36 pb-16 max-w-5xl mx-auto px-8 lg:px-0 grid gap-24">
         <Hero />
         <Product />
         <Features />

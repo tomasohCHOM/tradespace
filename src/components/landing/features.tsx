@@ -22,15 +22,15 @@ export const Features: React.FC = () => {
   ];
   return (
     <div className="text-center grid gap-12">
-      <h2 className="text-3xl font-bold">
+      <h2 className="text-2xl md:text-3xl font-bold">
         <span className="block">Join Online Communities.</span>
         <span className="block">Buy, Sell, and Trade!</span>
       </h2>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid justify-center md:grid-cols-3 gap-4">
         {features.map((feature) => (
           <Card
             key={feature.title}
-            className="min-h-[220px] flex flex-col justify-between"
+            className="max-w-[400px] min-h-[220px] flex flex-col lg:gap-8"
           >
             <CardHeader>
               <CardTitle>
