@@ -1,10 +1,27 @@
 rules_version = '2';
 
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
+    // User auth
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Match to userId folders
+    match /{folder}/{userId}/{allPaths=**} {
+
+      // Read user only
+      allow read: if isSignedIn();
+
+      // Write (create, update, delete) user only
+      // Images for Listings
+      allow write: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.size < 10 * 1024 * 1024 // limit 10MB
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // default
     match /{allPaths=**} {
       allow read, write: if false;
     }
