@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 
 export const LayoutNavbar: React.FC = () => {
   const { openMobile, setOpenMobile } = useSidebar();
-  console.log(open);
 
   return (
     <nav className="w-full fixed p-2 bg-background border-border border-b">
