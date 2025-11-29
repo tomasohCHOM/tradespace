@@ -1,6 +1,7 @@
 import { Home, LogOut, User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import type React from 'react';
+import { useAuth } from '@/context/AuthContext';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +12,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export const UserOptions: React.FC = () => {
+  const { logout, user } = useAuth();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -20,7 +23,7 @@ export const UserOptions: React.FC = () => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel>@tomasoh</DropdownMenuLabel>
+        <DropdownMenuLabel>{user?.email || 'User'}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer transition justify-between">
           <span>Dashboard</span>
@@ -30,7 +33,10 @@ export const UserOptions: React.FC = () => {
           <span>My Profile</span>
           <User />
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer transition justify-between">
+        <DropdownMenuItem
+          className="cursor-pointer transition justify-between"
+          onClick={logout}
+        >
           <span>Log Out</span>
           <LogOut />
         </DropdownMenuItem>

@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import type React from 'react';
 import { Button } from '@/components/ui/button';
 
@@ -10,8 +11,8 @@ export const CTA: React.FC = () => {
       <h2 className="text-center text-3xl md:text-6xl font-bold text-background">
         Ready to start trading?
       </h2>
-      <Button variant="outline" className="w-60 md:w-120 font-bold">
-        Get Started Today
+      <Button variant="outline" className="w-60 md:w-120 font-bold" asChild>
+        <Link to="/login">Get Started Today</Link>
       </Button>
     </div>
   );
