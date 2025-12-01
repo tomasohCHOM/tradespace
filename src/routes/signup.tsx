@@ -42,8 +42,8 @@ function RouteComponent() {
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError('Please enter both email and password');
+    if (!email || !password || !firstName || !lastName) {
+      setError('Please fill out all fields');
       return;
     }
 
