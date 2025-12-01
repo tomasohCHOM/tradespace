@@ -25,7 +25,6 @@ export const Route = createFileRoute('/login')({
 function LoginComponent() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -61,11 +60,7 @@ function LoginComponent() {
     try {
       setIsLoading(true);
       setError('');
-      if (isSignUp) {
-        await signUpWithEmail(email, password);
-      } else {
-        await signInWithEmail(email, password);
-      }
+      await signInWithEmail(email, password);
       navigate({ to: '/dashboard' });
     } catch (err: any) {
       console.error('Auth failed', err);
@@ -172,12 +167,10 @@ function LoginComponent() {
 
           <div className="space-y-2">
             <h2 className="text-4xl font-bold tracking-tight">
-              {isSignUp ? 'Create an account' : 'Welcome back'}
+              Welcome back
             </h2>
             <p className="text-muted-foreground">
-              {isSignUp
-                ? 'Enter your details to get started'
-                : 'Sign in to your account to continue'}
+              Sign in to your account to continue
             </p>
           </div>
 
@@ -214,7 +207,7 @@ function LoginComponent() {
                 {isLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
-                {isSignUp ? 'Sign Up' : 'Sign In'}
+                Sign In
               </Button>
             </form>
 
