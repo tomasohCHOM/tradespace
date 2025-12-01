@@ -12,7 +12,6 @@ import { useEffect, useState } from 'react';
 import {
   signInWithEmail,
   signInWithGoogle,
-  signUpWithEmail,
 } from '../firebase/auth';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
