@@ -60,7 +60,7 @@ function RouteComponent() {
     }
   };
   return (
-    <div className="flex min-h-screen w-full bg-background text-foreground font-sans selection:bg-blue-500/20">
+    <div className="flex justify-center min-h-screen w-full bg-background text-foreground font-sans selection:bg-blue-500/20">
       {/* Auth Form */}
       <div className="flex w-full flex-col justify-center bg-background p-6 lg:w-[480px] lg:p-12 border-l border-border/50">
         <div className="mx-auto w-full max-w-sm space-y-8">
