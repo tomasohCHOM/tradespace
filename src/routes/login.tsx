@@ -261,17 +261,13 @@ function LoginComponent() {
 
           <div className="rounded-xl border-2 border-dashed border-border/50 bg-muted/50 p-6 text-center">
             <p className="mb-3 text-sm text-muted-foreground">
-              {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+              Don't have an account?
             </p>
-            <button
-              onClick={() => {
-                setIsSignUp(!isSignUp);
-                setError('');
-              }}
+            <Link to="/signup"
               className="w-full rounded-lg bg-background border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
             >
-              {isSignUp ? 'Sign In' : 'Create an account'}
-            </button>
+              Create an account
+            </Link>
           </div>
 
           <div className="flex items-center justify-center gap-2 rounded-full bg-green-500/10 px-3 py-1.5 text-xs font-medium text-green-600 dark:text-green-400 w-fit mx-auto">
