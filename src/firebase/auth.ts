@@ -15,6 +15,16 @@ const googleProvider = new GoogleAuthProvider();
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
+    // Create profile if its their first sign in
+    const displayName = result.user.displayName || '';
+    const [firstName, ...lastNameParts] = displayName.split(' ');
+
+    await createUserProfile(result.user.uid, {
+      firstName: firstName || '',
+      lastName: lastNameParts.join('') || '',
+      email: result.user.email || '',
+    });
+
     return result.user;
   } catch (error) {
     console.error('Error signing in with Google', error);
@@ -53,13 +63,13 @@ export const signUpWithEmail = async (
     await updateProfile(userCredential.user, {
       // NOTE: We will use the users username as the displayName in the future
       displayName: `${firstName} ${lastName}`
-    })
+    });
 
     await createUserProfile(userCredential.user.uid, {
       firstName,
       lastName,
       email,
-    })
+    });
 
     return userCredential.user;
   } catch (error) {
