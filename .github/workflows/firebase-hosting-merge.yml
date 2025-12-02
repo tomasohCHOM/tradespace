@@ -4,7 +4,7 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
-  
+
 on:
   push:
     branches:
@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -31,13 +31,12 @@ jobs:
       - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: "not_used_but_required"
+          NPM_TOKEN: 'not_used_but_required'
         run: npx semantic-release
-
 
   build_and_deploy:
     name: Build & Deploy to Firebase
-    needs: release   
+    needs: release
     runs-on: ubuntu-latest
     environment: deploy
 
