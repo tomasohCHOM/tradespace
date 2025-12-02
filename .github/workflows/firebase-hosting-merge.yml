@@ -23,7 +23,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version-file: '.nvmrc'
 
       - name: Install dependencies
         run: npm ci
@@ -40,51 +40,32 @@ jobs:
     runs-on: ubuntu-latest
     environment: deploy
 
-    env:
-      VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
-      VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
-      VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
-      VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
-      VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
-      VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
-      VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
-      VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
-      VITE_GOOGLE_SEARCH_ENGINE_ID: ${{ secrets.VITE_GOOGLE_SEARCH_ENGINE_ID }}
-
-      # Google Keys to be used by Vision and other google services
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Debug Firebase environment
-        run: |
-          echo "VITE_FIREBASE_API_KEY length: ${#VITE_FIREBASE_API_KEY}"
-          echo "VITE_FIREBASE_AUTH_DOMAIN length: ${#VITE_FIREBASE_AUTH_DOMAIN}"
-          echo "VITE_FIREBASE_PROJECT_ID length: ${#VITE_FIREBASE_PROJECT_ID}"
-          echo "VITE_FIREBASE_STORAGE_BUCKET length: ${#VITE_FIREBASE_STORAGE_BUCKET}"
-          echo "VITE_FIREBASE_MESSAGING_SENDER_ID length: ${#VITE_FIREBASE_MESSAGING_SENDER_ID}"
-          echo "VITE_FIREBASE_APP_ID length: ${#VITE_FIREBASE_APP_ID}"
-          echo "VITE_FIREBASE_MEASUREMENT_ID length: ${#VITE_FIREBASE_MEASUREMENT_ID}"
-          echo "VITE_GOOGLE_API_KEY=${VITE_GOOGLE_API_KEY}" >> .env.production
-          echo "VITE_GOOGLE_SEARCH_ENGINE_ID=${VITE_GOOGLE_SEARCH_ENGINE_ID}" >> .env.production
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
 
-      - name: Create .env.production
-        run: |
-          echo "VITE_FIREBASE_API_KEY=${VITE_FIREBASE_API_KEY}" >> .env.production
-          echo "VITE_FIREBASE_AUTH_DOMAIN=${VITE_FIREBASE_AUTH_DOMAIN}" >> .env.production
-          echo "VITE_FIREBASE_PROJECT_ID=${VITE_FIREBASE_PROJECT_ID}" >> .env.production
-          echo "VITE_FIREBASE_STORAGE_BUCKET=${VITE_FIREBASE_STORAGE_BUCKET}" >> .env.production
-          echo "VITE_FIREBASE_MESSAGING_SENDER_ID=${VITE_FIREBASE_MESSAGING_SENDER_ID}" >> .env.production
-          echo "VITE_FIREBASE_APP_ID=${VITE_FIREBASE_APP_ID}" >> .env.production
-          echo "VITE_FIREBASE_MEASUREMENT_ID=${VITE_FIREBASE_MEASUREMENT_ID}" >> .env.production
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build app
-        run: npm ci && npm run build
+        env:
+          VITE_PUBLIC_FIREBASE_API_KEY: ${{ secrets.VITE_PUBLIC_FIREBASE_API_KEY }}
+          VITE_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          VITE_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.VITE_PUBLIC_FIREBASE_PROJECT_ID }}
+          VITE_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+          VITE_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_PUBLIC_FIREBASE_APP_ID: ${{ secrets.VITE_PUBLIC_FIREBASE_APP_ID }}
+        run: npm run build
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TRADESPACE_APP }}
-          channelId: live
           projectId: tradespace-491
+          channelId: live
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+
