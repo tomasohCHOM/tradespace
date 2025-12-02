@@ -4,8 +4,11 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile
 } from 'firebase/auth';
 import { auth } from './config';
+
+import { createUserProfile } from '@/lib/firestore';
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -38,10 +41,27 @@ export const signInWithEmail = async (email: string, pass: string) => {
   }
 };
 
-export const signUpWithEmail = async (email: string, pass: string) => {
+export const signUpWithEmail = async (
+  email: string,
+  pass: string,
+  firstName: string,
+  lastName: string,
+) => {
   try {
-    const result = await createUserWithEmailAndPassword(auth, email, pass);
-    return result.user;
+    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+
+    await updateProfile(userCredential.user, {
+      // NOTE: We will use the users username as the displayName in the future
+      displayName: `${firstName} ${lastName}`
+    })
+
+    await createUserProfile(userCredential.user.uid, {
+      firstName,
+      lastName,
+      email,
+    })
+
+    return userCredential.user;
   } catch (error) {
     console.error('Error signing up with email', error);
     throw error;

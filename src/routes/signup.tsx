@@ -50,7 +50,8 @@ function RouteComponent() {
     try {
       setIsLoading(true);
       setError('');
-      await signUpWithEmail(email, password);
+      await signUpWithEmail(email, password, firstName, lastName);
+      // TODO: navigate to /onboarding
       navigate({ to: '/dashboard' });
     } catch (err: any) {
       console.error('Auth failed', err);
