@@ -1,20 +1,19 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { 
+    CheckCircle2,
+    MessageSquare, 
+    Plus, 
+    Search, 
+    ShoppingBag, 
+    Star, 
+    TrendingUp, 
+    Users } from "lucide-react";
+
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
-import { createFileRoute } from "@tanstack/react-router";
 import FallBackImage from "../../images/brokenimage.jpg";
-import { 
-  Search, 
-  Users, 
-  TrendingUp, 
-  Star,
-  ShoppingBag,
-  MessageSquare,
-  Plus,
-  CheckCircle2
-} from "lucide-react";
-import { Fallback } from "@radix-ui/react-avatar";
 
 // Create a route for /_auth/search
 export const Route = createFileRoute('/_auth/search')({
@@ -32,14 +31,14 @@ interface Tradespace {
   activeListings: number;
   postsPerDay: number;
   imageUrl: string;
-  tags: string[];
+  tags: Array<string>;
   verified?: boolean;
   trending?: boolean;
   joined?: boolean;
 }
 
 // Mock data for demonstration
-const mockTradespaces: Tradespace[] = [
+const mockTradespaces: Array<Tradespace> = [
   {
     id: "tech-gadgets",
     name: "Tech & Gadgets",
