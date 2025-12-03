@@ -4,7 +4,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  updateProfile
+  updateProfile,
 } from 'firebase/auth';
 import { auth } from './config';
 
@@ -58,11 +58,15 @@ export const signUpWithEmail = async (
   lastName: string,
 ) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      pass,
+    );
 
     await updateProfile(userCredential.user, {
       // NOTE: We will use the users username as the displayName in the future
-      displayName: `${firstName} ${lastName}`
+      displayName: `${firstName} ${lastName}`,
     });
 
     await createUserProfile(userCredential.user.uid, {

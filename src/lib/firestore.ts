@@ -6,8 +6,8 @@ export async function createUserProfile(
   data: {
     firstName: string;
     lastName: string;
-    email: string,
-  }
+    email: string;
+  },
 ) {
   const userRef = doc(db, 'users', uid);
   const userDoc = await getDoc(userRef);

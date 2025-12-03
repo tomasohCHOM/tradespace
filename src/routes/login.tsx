@@ -9,10 +9,7 @@ import {
 } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
-import {
-  signInWithEmail,
-  signInWithGoogle,
-} from '../firebase/auth';
+import { signInWithEmail, signInWithGoogle } from '../firebase/auth';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -165,9 +162,7 @@ function LoginComponent() {
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-4xl font-bold tracking-tight">
-              Welcome back
-            </h2>
+            <h2 className="text-4xl font-bold tracking-tight">Welcome back</h2>
             <p className="text-muted-foreground">
               Sign in to your account to continue
             </p>
@@ -255,7 +250,8 @@ function LoginComponent() {
             <p className="mb-3 text-sm text-muted-foreground">
               Don't have an account?
             </p>
-            <Link to="/signup"
+            <Link
+              to="/signup"
               className="w-full rounded-lg bg-background border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
             >
               Create an account

@@ -1,22 +1,15 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import {
-  Loader2,
-  Lock,
-} from 'lucide-react';
+import { Loader2, Lock } from 'lucide-react';
 
 import { useState, useEffect } from 'react';
-import {
-  signUpWithEmail,
-  signInWithGoogle,
-} from '../firebase/auth';
+import { signUpWithEmail, signInWithGoogle } from '../firebase/auth';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 export const Route = createFileRoute('/signup')({
   component: SignupComponent,
-})
-
+});
 
 function SignupComponent() {
   const navigate = useNavigate();
@@ -32,7 +25,7 @@ function SignupComponent() {
     if (!loading && user) {
       navigate({ to: '/dashboard' });
     }
-  }, [user, loading, navigate])
+  }, [user, loading, navigate]);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -186,7 +179,8 @@ function SignupComponent() {
             <p className="mb-3 text-sm text-muted-foreground">
               Already have an account?
             </p>
-            <Link to="/login"
+            <Link
+              to="/login"
               className="w-full rounded-lg bg-background border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
             >
               Sign in
