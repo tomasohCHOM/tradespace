@@ -4,11 +4,12 @@ import {
   Lock,
 } from 'lucide-react';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   signUpWithEmail,
   signInWithGoogle,
 } from '../firebase/auth';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -19,12 +20,19 @@ export const Route = createFileRoute('/signup')({
 
 function SignupComponent() {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate({ to: '/dashboard' });
+    }
+  }, [user, loading, navigate])
 
   const handleGoogleSignIn = async () => {
     try {
