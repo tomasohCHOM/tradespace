@@ -1,8 +1,8 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Loader2, Lock } from 'lucide-react';
 
-import { useState, useEffect } from 'react';
-import { signUpWithEmail, signInWithGoogle } from '../firebase/auth';
+import { useEffect, useState } from 'react';
+import { signInWithGoogle, signUpWithEmail } from '../firebase/auth';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
