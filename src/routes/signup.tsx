@@ -13,11 +13,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 export const Route = createFileRoute('/signup')({
-  component: RouteComponent,
+  component: SignupComponent,
 })
 
 
-function RouteComponent() {
+function SignupComponent() {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
