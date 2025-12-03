@@ -1,4 +1,4 @@
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 export async function createUserProfile(
@@ -9,8 +9,14 @@ export async function createUserProfile(
     email: string,
   }
 ) {
-  await setDoc(doc(db, 'users', uid),  {
-    ...data,
-    createdAt: new Date().toISOString(),
-  });
+  const userRef = doc(db, 'users', uid);
+  const userDoc = await getDoc(userRef);
+
+  // Only create the profile if it doesn't already exist
+  if (!userDoc.exists()) {
+    await setDoc(userRef, {
+      ...data,
+      createdAt: new Date().toISOString(),
+    });
+  }
 }
