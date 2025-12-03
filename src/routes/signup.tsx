@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import {
   Loader2,
   Lock,
@@ -172,6 +172,17 @@ function RouteComponent() {
               </svg>
               <span className="font-medium">Sign up with Google</span>
             </button>
+          </div>
+
+          <div className="rounded-xl border-2 border-dashed border-border/50 bg-muted/50 p-6 text-center">
+            <p className="mb-3 text-sm text-muted-foreground">
+              Already have an account?
+            </p>
+            <Link to="/login"
+              className="w-full rounded-lg bg-background border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
+            >
+              Sign in
+            </Link>
           </div>
 
           <div className="flex items-center justify-center gap-2 rounded-full bg-green-500/10 px-3 py-1.5 text-xs font-medium text-green-600 dark:text-green-400 w-fit mx-auto">
