@@ -12,6 +12,7 @@
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
+    "e2e": "playwright test",
     "all": "npm run lint:fix && npm run format:fix && npm run build"
   },
   "dependencies": {
@@ -41,6 +42,7 @@
     "tw-animate-css": "^1.3.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "@tanstack/devtools-event-client": "^0.3.2",
     "@tanstack/devtools-vite": "^0.3.11",
     "@tanstack/eslint-config": "^0.3.0",
