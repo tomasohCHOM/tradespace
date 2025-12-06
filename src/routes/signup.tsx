@@ -1,26 +1,21 @@
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
-import {
-  ArrowLeft,
-  Loader2,
-  Lock,
-  MessageCircle,
-  ShoppingBag,
-  Users,
-} from 'lucide-react';
+import { Loader2, Lock } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
-import { signInWithEmail, signInWithGoogle } from '../firebase/auth';
+import { signInWithGoogle, signUpWithEmail } from '../firebase/auth';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-export const Route = createFileRoute('/login')({
-  component: LoginComponent,
+export const Route = createFileRoute('/signup')({
+  component: SignupComponent,
 });
 
-function LoginComponent() {
+function SignupComponent() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -48,15 +43,16 @@ function LoginComponent() {
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError('Please enter both email and password');
+    if (!email || !password || !firstName || !lastName) {
+      setError('Please fill out all fields');
       return;
     }
 
     try {
       setIsLoading(true);
       setError('');
-      await signInWithEmail(email, password);
+      await signUpWithEmail(email, password, firstName, lastName);
+      // TODO: navigate to /onboarding
       navigate({ to: '/dashboard' });
     } catch (err: any) {
       console.error('Auth failed', err);
@@ -65,95 +61,10 @@ function LoginComponent() {
       setIsLoading(false);
     }
   };
-
   return (
-    <div className="flex min-h-screen w-full bg-background text-foreground font-sans selection:bg-blue-500/20">
-      {/* Left Panel - Brand Experience */}
-      <div className="relative hidden w-0 flex-1 overflow-hidden lg:flex flex-col justify-between bg-slate-950 p-12 text-white">
-        {/* Animated Background Mesh */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute -top-[20%] -left-[10%] size-[600px] rounded-full bg-blue-600/20 blur-[120px] animate-pulse" />
-          <div className="absolute top-[40%] right-[10%] size-[500px] rounded-full bg-cyan-500/20 blur-[100px] animate-pulse [animation-delay:2s]" />
-          <div className="absolute -bottom-[10%] left-[20%] size-[600px] rounded-full bg-blue-600/10 blur-[120px] animate-pulse [animation-delay:4s]" />
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 flex h-full flex-col justify-between">
-          {/* Header */}
-          <div>
-            <Link
-              to="/"
-              className="group flex w-fit items-center gap-2 text-white/80 transition-all hover:gap-3 hover:text-white mb-12"
-            >
-              <ArrowLeft className="size-5 transition-transform group-hover:-translate-x-1" />
-              <span>Back to home</span>
-            </Link>
-
-            <div className="flex items-center gap-4 mb-8">
-              <div className="flex size-14 items-center justify-center rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md shadow-2xl">
-                <div className="size-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400" />
-              </div>
-              <span className="text-3xl font-bold tracking-tight">
-                Tradespace
-              </span>
-            </div>
-
-            <h1 className="max-w-xl text-5xl font-bold leading-[1.1] tracking-tight mb-6">
-              A trading space <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
-                for everyone.
-              </span>
-            </h1>
-            <p className="max-w-md text-xl text-white/80 leading-relaxed">
-              Join communities dedicated to your passions. Buy, sell, and trade
-              products with like-minded enthusiasts in a modern, collaborative
-              environment.
-            </p>
-          </div>
-
-          {/* Feature Highlights */}
-          <div className="grid gap-6 mb-12">
-            <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm transition-colors hover:bg-white/10">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-500/20 text-blue-400">
-                <ShoppingBag className="size-5" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-white">Marketplace</h3>
-                <p className="text-sm text-white/60">
-                  Browse and list products in dedicated tradespaces
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm transition-colors hover:bg-white/10">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-cyan-500/20 text-cyan-400">
-                <MessageCircle className="size-5" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-white">Forums</h3>
-                <p className="text-sm text-white/60">
-                  Engage in discussions and share tips
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm transition-colors hover:bg-white/10">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
-                <Users className="size-5" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-white">Community</h3>
-                <p className="text-sm text-white/60">
-                  Join topic-specific communities
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Right Panel - Auth Form */}
-      <div className="flex w-full flex-col justify-center bg-background p-6 lg:w-[480px] lg:p-12 border-l border-border/50">
+    <div className="flex justify-center min-h-screen w-full bg-background text-foreground font-sans selection:bg-blue-500/20">
+      {/* Auth Form */}
+      <div className="flex w-full flex-col justify-center bg-background p-6 lg:w-[480px] lg:p-12">
         <div className="mx-auto w-full max-w-sm space-y-8">
           {/* Mobile Logo */}
           <div className="flex items-center gap-3 lg:hidden">
@@ -162,15 +73,33 @@ function LoginComponent() {
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-4xl font-bold tracking-tight">Welcome back</h2>
+            <h2 className="text-4xl font-bold tracking-tight">
+              Create an account
+            </h2>
             <p className="text-muted-foreground">
-              Sign in to your account to continue
+              Enter your details to get started
             </p>
           </div>
 
           <div className="space-y-4">
             <form onSubmit={handleEmailAuth} className="space-y-4">
               <div className="space-y-2">
+                <Input
+                  type="text"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  disabled={isLoading}
+                  required
+                />
+                <Input
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  disabled={isLoading}
+                  required
+                />
                 <Input
                   type="email"
                   placeholder="Email"
@@ -201,7 +130,7 @@ function LoginComponent() {
                 {isLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
-                Sign In
+                Sign Up
               </Button>
             </form>
 
@@ -242,19 +171,19 @@ function LoginComponent() {
                   fill="#EA4335"
                 />
               </svg>
-              <span className="font-medium">Sign in with Google</span>
+              <span className="font-medium">Sign up with Google</span>
             </button>
           </div>
 
           <div className="rounded-xl border-2 border-dashed border-border/50 bg-muted/50 p-6 text-center">
             <p className="mb-3 text-sm text-muted-foreground">
-              Don't have an account?
+              Already have an account?
             </p>
             <Link
-              to="/signup"
+              to="/login"
               className="w-full rounded-lg bg-background border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
             >
-              Create an account
+              Sign in
             </Link>
           </div>
 
