@@ -8,6 +8,10 @@ import {
   Users,
 } from 'lucide-react';
 
+import { firebaseApp } from '@/firebase/config';
+
+console.log('Firebase project ID:', firebaseApp.options.projectId);
+
 import { useEffect, useState } from 'react';
 import { signInWithEmail, signInWithGoogle } from '../firebase/auth';
 import { useAuth } from '@/context/AuthContext';

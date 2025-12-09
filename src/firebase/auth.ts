@@ -6,6 +6,7 @@ import {
   signOut,
   updateProfile,
 } from 'firebase/auth';
+
 import { auth } from './config';
 
 import { createUserProfile } from '@/lib/firestore';
