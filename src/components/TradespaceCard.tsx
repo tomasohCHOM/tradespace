@@ -11,7 +11,7 @@ export function TradespaceCard({ tradespace }: { tradespace: Tradespace }) {
 
       <div className="aspect-video bg-muted relative overflow-hidden">
         <img
-          src={tradespace.imageUrl}
+          src={tradespace.thumbnailUrl}
           alt={tradespace.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform"
           onError={(e) => {

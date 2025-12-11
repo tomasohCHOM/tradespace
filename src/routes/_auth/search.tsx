@@ -3,17 +3,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Input } from "../../components/ui/input";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import {
-  Search,
-  ShoppingBag,
-  Users,
-  MessageSquare,
-  TrendingUp,
-  Star,
-} from "lucide-react";
-
+import { Search, ShoppingBag, Users, MessageSquare, TrendingUp, Star, Plus } from "lucide-react";
 
 import { type Tradespace, getTradespace } from "../../api/getTradespace";
+import { createTradespace } from "../../api/createTradespace";
 import { TradespaceCard } from "../../components/TradespaceCard";
 
 export const Route = createFileRoute("/_auth/search")({
@@ -24,28 +17,39 @@ function SearchPage() {
   const [tradespaces, setTradespaces] = useState<Tradespace[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Create form state
+  const [openCreate, setOpenCreate] = useState(false);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
   useEffect(() => {
-  async function load() {
-    const result = await getTradespace();
-
-    // Quick console test
-    console.log("All tradespaces fetched:", result);
-
-    // Optional: check specifically for "tech-gadgets"
-    const techGadgets = result.find(ts => ts.id === "tech-gadgets");
-    if (techGadgets) {
-      console.log("✅ Found 'tech-gadgets' document:", techGadgets);
-    } else {
-      console.log("❌ 'tech-gadgets' not found");
+    async function load() {
+      const result = await getTradespace();
+      setTradespaces(result);
+      setLoading(false);
     }
-
-    setTradespaces(result);
-    setLoading(false);
-  }
     load();
   }, []);
-  
+
+  async function handleCreate() {
+    if (!thumbnailFile) {
+      alert("Please upload a thumbnail image.");
+      return;
+    }
+
+    const newTs = await createTradespace({
+      name,
+      description,
+      thumbnailFile,
+    });
+
+    setTradespaces((prev) => [newTs, ...prev]);
+    setOpenCreate(false);
+    setName("");
+    setDescription("");
+    setThumbnailFile(null);
+  }
 
   if (loading) {
     return (
@@ -60,7 +64,47 @@ function SearchPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h2 className="text-2xl mb-2">Discover Tradespaces</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl">Discover Tradespaces</h2>
+
+        <Button onClick={() => setOpenCreate(true)} className="gap-2">
+          <Plus className="size-4" /> Create Tradespace
+        </Button>
+      </div>
+
+      {/* Create Tradespace Modal */}
+      {openCreate && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="p-6 w-[400px] space-y-4 z-50 relative">
+            <h3 className="text-lg font-semibold">Create New Tradespace</h3>
+
+            <Input
+              placeholder="Tradespace Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+
+            <Input
+              placeholder="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setThumbnailFile(e.target.files?.[0] ?? null)}
+            />
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setOpenCreate(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleCreate}>Create</Button>
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* Search Bar */}
       <div className="relative mb-6">
@@ -115,15 +159,7 @@ function SearchPage() {
 
       {/* All Tradespaces */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg">All Tradespaces</h3>
-
-          <Button size="sm" variant="outline">
-            <Star className="size-4 mr-2" />
-            Most Popular
-          </Button>
-        </div>
-
+        <h3 className="text-lg mb-4">All Tradespaces</h3>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {standard.map((ts) => (
             <TradespaceCard key={ts.id} tradespace={ts} />

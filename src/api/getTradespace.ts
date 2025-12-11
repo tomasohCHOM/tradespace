@@ -2,20 +2,19 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../src/firebase/config";
 
 
-export interface Tradespace { //Probably need to remove some types here.
+export type Tradespace = {
   id: string;
   name: string;
-  description: string;
-  category: string;
-  members: number;
-  activeListings: number;
-  postsPerDay: number;
-  imageUrl: string;
-  tags: string[];
-  verified?: boolean;
+  description?: string;
+  thumbnailUrl?: string;
   trending?: boolean;
-  joined?: boolean;
-}
+  members?: number;
+  postsPerDay?: number;
+  activeListings?: number;
+  tags?: string[];
+  category?: string;
+};
+
 
 //This function simply gets tradespaces from firestore for the explore page.
 
@@ -28,4 +27,3 @@ export async function getTradespace(): Promise<Tradespace[]> {
     ...doc.data(),
   })) as Tradespace[];
 }
-console.log("DB instance in getTradespace:", db);
