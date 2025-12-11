@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from 'react';
+import { createFileRoute } from '@tanstack/react-router';
 import {
   MessageSquare,
   Plus,
@@ -8,18 +8,17 @@ import {
   Star,
   TrendingUp,
   Users,
-} from "lucide-react";
-import { Input } from "../../components/ui/input";
-import { Card } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
+} from 'lucide-react';
+import { Input } from '../../components/ui/input';
+import { Card } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
 
+import { getTradespace } from '../../api/getTradespace';
+import { createTradespace } from '../../api/createTradespace';
+import { TradespaceCard } from '../../components/TradespaceCard';
+import type { Tradespace } from '../../api/getTradespace';
 
-import { getTradespace } from "../../api/getTradespace";
-import { createTradespace } from "../../api/createTradespace";
-import { TradespaceCard } from "../../components/TradespaceCard";
-import type { Tradespace } from "../../api/getTradespace";
-
-export const Route = createFileRoute("/_auth/search")({
+export const Route = createFileRoute('/_auth/search')({
   component: SearchPage,
 });
 
@@ -29,8 +28,8 @@ function SearchPage() {
 
   // Create form state
   const [openCreate, setOpenCreate] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -44,7 +43,7 @@ function SearchPage() {
 
   async function handleCreate() {
     if (!thumbnailFile) {
-      alert("Please upload a thumbnail image.");
+      alert('Please upload a thumbnail image.');
       return;
     }
 
@@ -56,8 +55,8 @@ function SearchPage() {
 
     setTradespaces((prev) => [newTs, ...prev]);
     setOpenCreate(false);
-    setName("");
-    setDescription("");
+    setName('');
+    setDescription('');
     setThumbnailFile(null);
   }
 

@@ -1,6 +1,5 @@
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../src/firebase/config";
-
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../src/firebase/config';
 
 export type Tradespace = {
   id: string;
@@ -16,14 +15,13 @@ export type Tradespace = {
   verified?: boolean;
 };
 
-
 // This function simply gets tradespaces from firestore for the explore page.
 
 export async function getTradespace(): Promise<Array<Tradespace>> {
-  const colRef = collection(db, "tradespaces");
+  const colRef = collection(db, 'tradespaces');
   const snapshot = await getDocs(colRef);
 
-  return snapshot.docs.map(doc => ({
+  return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   })) as Array<Tradespace>;

@@ -1,14 +1,13 @@
-import { CheckCircle2, Plus, TrendingUp } from "lucide-react";
-import FallBackImage from "../../src/images/brokenimage.jpg";
-import { Card } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import type { Tradespace } from "../api/getTradespace";
+import { CheckCircle2, Plus, TrendingUp } from 'lucide-react';
+import FallBackImage from '../../src/images/brokenimage.jpg';
+import { Card } from './ui/card';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import type { Tradespace } from '../api/getTradespace';
 
 export function TradespaceCard({ tradespace }: { tradespace: Tradespace }) {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
-
       <div className="aspect-video bg-muted relative overflow-hidden">
         <img
           src={tradespace.thumbnailUrl}

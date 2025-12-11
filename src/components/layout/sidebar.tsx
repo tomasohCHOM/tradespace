@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   ChevronRight,
   FileText,
@@ -8,8 +8,8 @@ import {
   Search,
   Settings,
   ShoppingBag,
-} from "lucide-react";
-import { Link, useMatchRoute } from "@tanstack/react-router";
+} from 'lucide-react';
+import { Link, useMatchRoute } from '@tanstack/react-router';
 import {
   Sidebar,
   SidebarContent,
@@ -20,7 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 
 type NavItem = {
   title: string;
@@ -34,7 +34,11 @@ type SidebarNavSectionProps = {
   label?: string;
 };
 
-const SidebarNavSection: React.FC<SidebarNavSectionProps> = ({ items, matchRoute, label }) => (
+const SidebarNavSection: React.FC<SidebarNavSectionProps> = ({
+  items,
+  matchRoute,
+  label,
+}) => (
   <SidebarGroup className="gap-4">
     {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
     <SidebarGroupContent>
@@ -43,7 +47,11 @@ const SidebarNavSection: React.FC<SidebarNavSectionProps> = ({ items, matchRoute
           const isActive = !!matchRoute({ to: item.url });
           return (
             <SidebarMenuItem key={item.url}>
-              <SidebarMenuButton className="transition" isActive={isActive} asChild>
+              <SidebarMenuButton
+                className="transition"
+                isActive={isActive}
+                asChild
+              >
                 <Link to={item.url}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
@@ -62,16 +70,21 @@ interface TradespaceSectionProps {
   matchRoute: ReturnType<typeof useMatchRoute>;
 }
 
-const TradespaceSection: React.FC<TradespaceSectionProps> = ({ tradespace, matchRoute }) => {
+const TradespaceSection: React.FC<TradespaceSectionProps> = ({
+  tradespace,
+  matchRoute,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const sections: Array<NavItem> = [
-    { title: "Products", url: `/${tradespace}/products`, icon: ShoppingBag },
-    { title: "Forums", url: `/${tradespace}/forums`, icon: MessageSquare },
-    { title: "Topics", url: `/${tradespace}/topics`, icon: FileText },
+    { title: 'Products', url: `/${tradespace}/products`, icon: ShoppingBag },
+    { title: 'Forums', url: `/${tradespace}/forums`, icon: MessageSquare },
+    { title: 'Topics', url: `/${tradespace}/topics`, icon: FileText },
   ];
 
-  const isAnyChildActive = sections.some(section => matchRoute({ to: section.url }));
+  const isAnyChildActive = sections.some((section) =>
+    matchRoute({ to: section.url }),
+  );
 
   return (
     <SidebarGroup className="gap-1">
@@ -79,12 +92,14 @@ const TradespaceSection: React.FC<TradespaceSectionProps> = ({ tradespace, match
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors ${
-            isAnyChildActive ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+            isAnyChildActive
+              ? 'bg-accent text-accent-foreground'
+              : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
           }`}
         >
           <ChevronRight
             className={`size-4 text-muted-foreground transition-transform duration-200 ${
-              isOpen ? "rotate-90" : "rotate-0"
+              isOpen ? 'rotate-90' : 'rotate-0'
             }`}
           />
           <span className="flex-1 text-left">{tradespace}</span>
@@ -97,7 +112,11 @@ const TradespaceSection: React.FC<TradespaceSectionProps> = ({ tradespace, match
               const isActive = matchRoute({ to: section.url });
               return (
                 <SidebarMenuItem key={section.url}>
-                  <SidebarMenuButton className="transition pl-4" isActive={isActive} asChild>
+                  <SidebarMenuButton
+                    className="transition pl-4"
+                    isActive={isActive}
+                    asChild
+                  >
                     <Link to={section.url}>
                       {section.icon && <section.icon />}
                       <span>{section.title}</span>
@@ -141,8 +160,12 @@ export const LayoutSidebar: React.FC<Props> = ({ tradespaces }) => {
             <SidebarGroup>
               <SidebarGroupLabel>TRADESPACES</SidebarGroupLabel>
               <SidebarGroupContent className="space-y-1">
-                {tradespaces.map(tradespace => (
-                  <TradespaceSection key={tradespace} tradespace={tradespace} matchRoute={matchRoute} />
+                {tradespaces.map((tradespace) => (
+                  <TradespaceSection
+                    key={tradespace}
+                    tradespace={tradespace}
+                    matchRoute={matchRoute}
+                  />
                 ))}
               </SidebarGroupContent>
             </SidebarGroup>
