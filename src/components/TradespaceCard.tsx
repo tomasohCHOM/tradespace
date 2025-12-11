@@ -1,8 +1,8 @@
+import { CheckCircle2, Plus, TrendingUp } from "lucide-react";
+import FallBackImage from "../../src/images/brokenimage.jpg";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { TrendingUp, CheckCircle2, Plus } from "lucide-react";
-import FallBackImage from "../../src/images/brokenimage.jpg";
 import type { Tradespace } from "../api/getTradespace";
 
 export function TradespaceCard({ tradespace }: { tradespace: Tradespace }) {

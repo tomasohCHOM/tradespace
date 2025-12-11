@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Input } from "../../components/ui/input";
-import { Card } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-
 import {
   MessageSquare,
   Plus,
@@ -13,18 +9,22 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
+import { Input } from "../../components/ui/input";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 
-import type { Tradespace } from "../../api/getTradespace";
+
 import { getTradespace } from "../../api/getTradespace";
 import { createTradespace } from "../../api/createTradespace";
 import { TradespaceCard } from "../../components/TradespaceCard";
+import type { Tradespace } from "../../api/getTradespace";
 
 export const Route = createFileRoute("/_auth/search")({
   component: SearchPage,
 });
 
 function SearchPage() {
-  const [tradespaces, setTradespaces] = useState<Tradespace[]>([]);
+  const [tradespaces, setTradespaces] = useState<Array<Tradespace>>([]);
   const [loading, setLoading] = useState(true);
 
   // Create form state
