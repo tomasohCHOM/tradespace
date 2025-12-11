@@ -3,9 +3,19 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Input } from "../../components/ui/input";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import { Search, ShoppingBag, Users, MessageSquare, TrendingUp, Star, Plus } from "lucide-react";
 
-import { type Tradespace, getTradespace } from "../../api/getTradespace";
+import {
+  MessageSquare,
+  Plus,
+  Search,
+  ShoppingBag,
+  Star,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+
+import type { Tradespace } from "../../api/getTradespace";
+import { getTradespace } from "../../api/getTradespace";
 import { createTradespace } from "../../api/createTradespace";
 import { TradespaceCard } from "../../components/TradespaceCard";
 

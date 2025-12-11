@@ -13,6 +13,7 @@ export type Tradespace = {
   activeListings?: number;
   tags?: string[];
   category?: string;
+  verified?: boolean;
 };
 
 

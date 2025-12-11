@@ -1,6 +1,15 @@
 import { useState } from "react";
-import { Home, Mail, Search, Settings, ShoppingBag, MessageSquare, FileText, ChevronRight } from 'lucide-react';
-import { Link, useMatchRoute } from '@tanstack/react-router';
+import {
+  ChevronRight,
+  FileText,
+  Home,
+  Mail,
+  MessageSquare,
+  Search,
+  Settings,
+  ShoppingBag,
+} from "lucide-react";
+import { Link, useMatchRoute } from "@tanstack/react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
-} from '@/components/ui/sidebar';
+} from "@/components/ui/sidebar";
 
 type NavItem = {
   title: string;
