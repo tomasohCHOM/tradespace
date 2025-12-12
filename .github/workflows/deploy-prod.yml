@@ -1,0 +1,70 @@
+name: Deploy + Release Automation
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    name: Automatic Versioning + Release Notes
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: 'not_used_but_required'
+        run: npx semantic-release
+
+  build_and_deploy:
+    name: Build & Deploy to Firebase
+    needs: release
+    runs-on: ubuntu-latest
+    environment: deploy
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        env:
+          VITE_PUBLIC_FIREBASE_API_KEY: ${{ secrets.VITE_PUBLIC_FIREBASE_API_KEY }}
+          VITE_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          VITE_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.VITE_PUBLIC_FIREBASE_PROJECT_ID }}
+          VITE_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+          VITE_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_PUBLIC_FIREBASE_APP_ID: ${{ secrets.VITE_PUBLIC_FIREBASE_APP_ID }}
+        run: npm run build
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TRADESPACE_APP }}
+          projectId: tradespace-491
+          channelId: live
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
