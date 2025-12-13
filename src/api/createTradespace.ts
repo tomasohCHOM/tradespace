@@ -28,7 +28,7 @@ export async function createTradespace({
     thumbnailUrl,
     createdAt: Timestamp.now(),
     trending: false,
-    members: 0,
+    memberCount: 0,
     postsPerDay: 0,
   });
 
@@ -38,7 +38,7 @@ export async function createTradespace({
     description,
     thumbnailUrl,
     trending: false,
-    members: 0,
+    memberCount: 0,
     postsPerDay: 0,
   };
 }

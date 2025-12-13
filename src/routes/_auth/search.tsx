@@ -12,17 +12,21 @@ import { Input } from '../../components/ui/input';
 import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 
-import { getTradespace } from '../../api/getTradespace';
+import { getTradespaces } from '../../api/getTradespaces';
 import { createTradespace } from '../../api/createTradespace';
 import { TradespaceCard } from '../../components/TradespaceCard';
-import type { Tradespace } from '../../api/getTradespace';
+import type { Tradespace } from '@/types/tradespace';
+import { getUserTradespaces } from '@/api/getUserTradespaces';
+import { useAuth } from '@/context/AuthContext';
 
 export const Route = createFileRoute('/_auth/search')({
   component: SearchPage,
 });
 
 function SearchPage() {
+  const { user } = useAuth();
   const [tradespaces, setTradespaces] = useState<Array<Tradespace>>([]);
+  const [userTradespaces, setUserTradespaces] = useState<Array<Tradespace>>([]);
   const [loading, setLoading] = useState(true);
 
   // Create form state
@@ -33,12 +37,20 @@ function SearchPage() {
 
   useEffect(() => {
     async function load() {
-      const result = await getTradespace();
-      setTradespaces(result);
+      const tradespacesResponse = await getTradespaces();
+      setTradespaces(tradespacesResponse);
+      if (user) {
+        const userTradespacesResponse = await getUserTradespaces(user.uid);
+        setUserTradespaces(userTradespacesResponse);
+      }
       setLoading(false);
     }
     load();
   }, []);
+
+  const joinedIds = new Set(userTradespaces.map((t) => t.id));
+  console.log(joinedIds);
+  console.log(tradespaces);
 
   async function handleCreate() {
     if (!thumbnailFile) {
@@ -135,7 +147,7 @@ function SearchPage() {
           <div>
             <p className="text-sm text-muted-foreground">Total Members</p>
             <p className="text-2xl">
-              {tradespaces.reduce((sum, t) => sum + (t.members || 0), 0)}
+              {tradespaces.reduce((sum, t) => sum + (t.memberCount || 0), 0)}
             </p>
           </div>
         </Card>
@@ -160,7 +172,11 @@ function SearchPage() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {trending.map((ts) => (
-            <TradespaceCard key={ts.id} tradespace={ts} />
+            <TradespaceCard
+              key={ts.id}
+              tradespace={ts}
+              joined={joinedIds.has(ts.id)}
+            />
           ))}
         </div>
       </div>
@@ -170,7 +186,11 @@ function SearchPage() {
         <h3 className="text-lg mb-4">All Tradespaces</h3>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {standard.map((ts) => (
-            <TradespaceCard key={ts.id} tradespace={ts} />
+            <TradespaceCard
+              key={ts.id}
+              tradespace={ts}
+              joined={joinedIds.has(ts.id)}
+            />
           ))}
         </div>
       </div>
