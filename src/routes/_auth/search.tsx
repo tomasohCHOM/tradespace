@@ -35,22 +35,45 @@ function SearchPage() {
   const [description, setDescription] = useState('');
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
-  useEffect(() => {
-    async function load() {
-      const tradespacesResponse = await getTradespaces();
-      setTradespaces(tradespacesResponse);
-      if (user) {
-        const userTradespacesResponse = await getUserTradespaces(user.uid);
-        setUserTradespaces(userTradespacesResponse);
-      }
-      setLoading(false);
+  // Load function to refresh data
+  const loadData = async () => {
+    setLoading(true);
+    const tradespacesResponse = await getTradespaces();
+    setTradespaces(tradespacesResponse);
+    if (user) {
+      const userTradespacesResponse = await getUserTradespaces(user.uid);
+      setUserTradespaces(userTradespacesResponse);
     }
-    load();
-  }, []);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [user]);
+
+  // Reload when page becomes visible (user returns from another page)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        loadData();
+      }
+    };
+
+    // Also reload on window focus
+    const handleFocus = () => {
+      loadData();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [user]);
 
   const joinedIds = new Set(userTradespaces.map((t) => t.id));
-  console.log(joinedIds);
-  console.log(tradespaces);
 
   async function handleCreate() {
     if (!thumbnailFile) {

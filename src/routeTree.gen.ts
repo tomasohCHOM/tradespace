@@ -15,6 +15,7 @@ import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthSearchRouteImport } from './routes/_auth/search'
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
+import { Route as AuthTradespacesTradespaceIdRouteImport } from './routes/_auth/tradespaces/$tradespaceId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -45,6 +46,12 @@ const AuthDashboardRoute = AuthDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AuthTradespacesTradespaceIdRoute =
+  AuthTradespacesTradespaceIdRouteImport.update({
+    id: '/tradespaces/$tradespaceId',
+    path: '/tradespaces/$tradespaceId',
+    getParentRoute: () => AuthRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -52,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthDashboardRoute
   '/search': typeof AuthSearchRoute
+  '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -59,6 +67,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthDashboardRoute
   '/search': typeof AuthSearchRoute
+  '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,12 +77,25 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_auth/dashboard': typeof AuthDashboardRoute
   '/_auth/search': typeof AuthSearchRoute
+  '/_auth/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/signup' | '/dashboard' | '/search'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/dashboard'
+    | '/search'
+    | '/tradespaces/$tradespaceId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/signup' | '/dashboard' | '/search'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/dashboard'
+    | '/search'
+    | '/tradespaces/$tradespaceId'
   id:
     | '__root__'
     | '/'
@@ -82,6 +104,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_auth/dashboard'
     | '/_auth/search'
+    | '/_auth/tradespaces/$tradespaceId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -135,17 +158,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthDashboardRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_auth/tradespaces/$tradespaceId': {
+      id: '/_auth/tradespaces/$tradespaceId'
+      path: '/tradespaces/$tradespaceId'
+      fullPath: '/tradespaces/$tradespaceId'
+      preLoaderRoute: typeof AuthTradespacesTradespaceIdRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
   }
 }
 
 interface AuthRouteRouteChildren {
   AuthDashboardRoute: typeof AuthDashboardRoute
   AuthSearchRoute: typeof AuthSearchRoute
+  AuthTradespacesTradespaceIdRoute: typeof AuthTradespacesTradespaceIdRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthDashboardRoute: AuthDashboardRoute,
   AuthSearchRoute: AuthSearchRoute,
+  AuthTradespacesTradespaceIdRoute: AuthTradespacesTradespaceIdRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
