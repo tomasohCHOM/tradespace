@@ -101,14 +101,14 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
       (snap) => {
         const rows: Array<Product> = snap.docs.map((d) => {
           const data = d.data() as ListingDoc;
-          const createdAtMs = data.dateCreated?.toMillis?.();
+          const createdAtMs = data.dateCreated ? data.dateCreated.toMillis() : undefined;
 
           return {
             id: d.id,
-            title: data.title ?? "Untitled listing",
+            title: typeof data.title === "string" && data.title.length ? data.title : "Untitled listing",
             price: typeof data.price === "number" ? data.price : Number(data.price ?? 0),
-            condition: data.condition ?? "Used",
-            seller: data.sellerName ?? "Unknown",
+            condition: typeof data.condition === "string" && data.condition.length ? data.condition : "Used",
+            seller: typeof data.sellerName === "string" && data.sellerName.length ? data.sellerName : "Unknown",
             imageUrl: firstImage(data.imageUrls),
             postedAt: timeAgo(createdAtMs),
             tags: Array.isArray(data.tags) ? data.tags : [],
