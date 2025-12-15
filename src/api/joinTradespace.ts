@@ -30,7 +30,7 @@ export async function joinTradespace(tradespaceId: string, uid: string) {
     tx.set(userTradespacesRef, {
       role: 'member',
       joinedAt: Timestamp.now(),
-      name: data.name,                
+      name: data.name,
     });
 
     tx.update(tradespaceRef, {

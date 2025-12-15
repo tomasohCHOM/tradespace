@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { auth, db, storage } from "@/firebase/config";
-import { Button } from "@/components/ui/button";
+import { useMemo, useState } from 'react';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { auth, db, storage } from '@/firebase/config';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
 type Props = {
   tradespaceId: string;
@@ -18,13 +18,17 @@ type Props = {
   onOpenChange: (open: boolean) => void;
 };
 
-export default function AddListingModal({ tradespaceId, open, onOpenChange }: Props) {
+export default function AddListingModal({
+  tradespaceId,
+  open,
+  onOpenChange,
+}: Props) {
   const user = auth.currentUser;
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<string>("");
-  const [condition, setCondition] = useState("Used");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState<string>('');
+  const [condition, setCondition] = useState('Used');
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +38,13 @@ export default function AddListingModal({ tradespaceId, open, onOpenChange }: Pr
 
   const canSubmit = useMemo(() => {
     const p = Number(price);
-    return !!user && tradespaceId && title.trim().length > 0 && !Number.isNaN(p) && p >= 0;
+    return (
+      !!user &&
+      tradespaceId &&
+      title.trim().length > 0 &&
+      !Number.isNaN(p) &&
+      p >= 0
+    );
   }, [user, tradespaceId, title, price]);
 
   function onPickImage(e: React.ChangeEvent<HTMLInputElement>) {
@@ -50,13 +60,13 @@ export default function AddListingModal({ tradespaceId, open, onOpenChange }: Pr
     setError(null);
 
     if (!user) {
-      setError("You must be logged in to create a listing.");
+      setError('You must be logged in to create a listing.');
       return;
     }
 
     const p = Number(price);
     if (Number.isNaN(p) || p < 0) {
-      setError("Please enter a valid price.");
+      setError('Please enter a valid price.');
       return;
     }
 
@@ -64,9 +74,8 @@ export default function AddListingModal({ tradespaceId, open, onOpenChange }: Pr
     try {
       let imageUrls: Array<string> = [];
 
-     
       if (imageFile) {
-        const safeName = imageFile.name.replace(/[^\w.-]+/g, "_");
+        const safeName = imageFile.name.replace(/[^\w.-]+/g, '_');
         const path = `tradespaces/${tradespaceId}/listings/${user.uid}/${Date.now()}-${safeName}`;
         const storageRef = ref(storage, path);
 
@@ -75,13 +84,13 @@ export default function AddListingModal({ tradespaceId, open, onOpenChange }: Pr
         imageUrls = [url];
       }
 
-      await addDoc(collection(db, "tradespaces", tradespaceId, "listings"), {
+      await addDoc(collection(db, 'tradespaces', tradespaceId, 'listings'), {
         title: title.trim(),
         description: description.trim(),
         price: p,
         condition,
         sellerId: user.uid,
-        sellerName: user.displayName ?? user.email ?? "Unknown",
+        sellerName: user.displayName ?? user.email ?? 'Unknown',
         imageUrls,
         dateCreated: serverTimestamp(),
         offers: 0,
@@ -89,10 +98,10 @@ export default function AddListingModal({ tradespaceId, open, onOpenChange }: Pr
       });
 
       // reset and close
-      setTitle("");
-      setDescription("");
-      setPrice("");
-      setCondition("Used");
+      setTitle('');
+      setDescription('');
+      setPrice('');
+      setCondition('Used');
 
       setImageFile(null);
       if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -100,8 +109,8 @@ export default function AddListingModal({ tradespaceId, open, onOpenChange }: Pr
 
       onOpenChange(false);
     } catch (err: any) {
-      console.error("Create listing failed:", err);
-      setError(err?.message ?? "Failed to create listing.");
+      console.error('Create listing failed:', err);
+      setError(err?.message ?? 'Failed to create listing.');
     } finally {
       setSaving(false);
     }
@@ -215,7 +224,7 @@ export default function AddListingModal({ tradespaceId, open, onOpenChange }: Pr
               Cancel
             </Button>
             <Button type="submit" disabled={!canSubmit || saving}>
-              {saving ? "Listing..." : "Create Listing"}
+              {saving ? 'Listing...' : 'Create Listing'}
             </Button>
           </DialogFooter>
         </form>

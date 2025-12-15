@@ -47,7 +47,11 @@ const SidebarNavSection: React.FC<SidebarNavSectionProps> = ({
           const isActive = !!matchRoute({ to: item.url });
           return (
             <SidebarMenuItem key={item.url}>
-              <SidebarMenuButton className="transition" isActive={isActive} asChild>
+              <SidebarMenuButton
+                className="transition"
+                isActive={isActive}
+                asChild
+              >
                 <Link to={item.url}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
@@ -78,11 +82,10 @@ const TradespaceSection: React.FC<TradespaceSectionProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-// tradespace routes
-const productsTo = "/tradespaces/$tradespaceId/products" as const;
-const forumsTo = "/tradespaces/$tradespaceId/forums" as const;
-const topicsTo = "/tradespaces/$tradespaceId/topics" as const;
-
+  // tradespace routes
+  const productsTo = '/tradespaces/$tradespaceId/products' as const;
+  const forumsTo = '/tradespaces/$tradespaceId/forums' as const;
+  const topicsTo = '/tradespaces/$tradespaceId/topics' as const;
 
   const isAnyChildActive =
     !!matchRoute({ to: productsTo, params: { tradespaceId: tradespace.id } }) ||
@@ -117,10 +120,12 @@ const topicsTo = "/tradespaces/$tradespaceId/topics" as const;
             <SidebarMenuItem>
               <SidebarMenuButton
                 className="transition pl-4"
-                isActive={!!matchRoute({
-                  to: productsTo,
-                  params: { tradespaceId: tradespace.id },
-                })}
+                isActive={
+                  !!matchRoute({
+                    to: productsTo,
+                    params: { tradespaceId: tradespace.id },
+                  })
+                }
                 asChild
               >
                 <Link to={productsTo} params={{ tradespaceId: tradespace.id }}>
@@ -134,10 +139,12 @@ const topicsTo = "/tradespaces/$tradespaceId/topics" as const;
             <SidebarMenuItem>
               <SidebarMenuButton
                 className="transition pl-4"
-                isActive={!!matchRoute({
-                  to: forumsTo,
-                  params: { tradespaceId: tradespace.id },
-                })}
+                isActive={
+                  !!matchRoute({
+                    to: forumsTo,
+                    params: { tradespaceId: tradespace.id },
+                  })
+                }
                 asChild
               >
                 <Link to={forumsTo} params={{ tradespaceId: tradespace.id }}>
@@ -151,10 +158,12 @@ const topicsTo = "/tradespaces/$tradespaceId/topics" as const;
             <SidebarMenuItem>
               <SidebarMenuButton
                 className="transition pl-4"
-                isActive={!!matchRoute({
-                  to: topicsTo,
-                  params: { tradespaceId: tradespace.id },
-                })}
+                isActive={
+                  !!matchRoute({
+                    to: topicsTo,
+                    params: { tradespaceId: tradespace.id },
+                  })
+                }
                 asChild
               >
                 <Link to={topicsTo} params={{ tradespaceId: tradespace.id }}>

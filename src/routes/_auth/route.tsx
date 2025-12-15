@@ -24,18 +24,21 @@ function WorkspaceLayout() {
     }
   }, [user, loading, navigate]);
 
-
-   useEffect(() => {
+  useEffect(() => {
     if (!user) return;
 
     getUserTradespaces(user.uid).then(setTradespaces);
   }, [user]);
 
- if (loading) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
-   if (!user) return null;
+  if (!user) return null;
 
   return (
     <SidebarProvider>

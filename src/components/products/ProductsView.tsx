@@ -1,29 +1,28 @@
-import { useEffect, useMemo, useState } from "react";
-import { Clock, DollarSign, Filter, Plus, TrendingUp } from "lucide-react";
+import { useEffect, useMemo, useState } from 'react';
+import { Clock, DollarSign, Filter, Plus, TrendingUp } from 'lucide-react';
 import {
-  
   collection,
   limit,
   onSnapshot,
   orderBy,
-  query
-} from "firebase/firestore";
-import type {Timestamp} from "firebase/firestore";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ImageWithFallback } from "@/components/ImageWithFallback";
+  query,
+} from 'firebase/firestore';
+import type { Timestamp } from 'firebase/firestore';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ImageWithFallback } from '@/components/ImageWithFallback';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
-import { db } from "@/firebase/config";
+import { db } from '@/firebase/config';
 
-import AddListingModal from "@/components/listings/AddListingModal";
+import AddListingModal from '@/components/listings/AddListingModal';
 
 interface Product {
   id: string;
@@ -50,18 +49,18 @@ type ListingDoc = {
   offers?: number;
 };
 
-function firstImage(imageUrls: ListingDoc["imageUrls"]) {
-  if (Array.isArray(imageUrls)) return String(imageUrls[0] ?? "");
-  if (typeof imageUrls === "string") return imageUrls;
-  return "";
+function firstImage(imageUrls: ListingDoc['imageUrls']) {
+  if (Array.isArray(imageUrls)) return String(imageUrls[0] ?? '');
+  if (typeof imageUrls === 'string') return imageUrls;
+  return '';
 }
 
 function normalizeCondition(value: string) {
-  return value.toLowerCase().replace(/\s+/g, "-");
+  return value.toLowerCase().replace(/\s+/g, '-');
 }
 
 function timeAgo(ms?: number) {
-  if (!ms) return "Just now";
+  if (!ms) return 'Just now';
   const sec = Math.max(1, Math.floor((Date.now() - ms) / 1000));
   if (sec < 60) return `${sec}s ago`;
   const min = Math.floor(sec / 60);
@@ -71,12 +70,16 @@ function timeAgo(ms?: number) {
   return `${Math.floor(hr / 24)}d ago`;
 }
 
-type SortKey = "recent" | "price-low" | "price-high" | "popular";
-type ConditionKey = "all" | "new" | "like-new" | "excellent" | "used";
+type SortKey = 'recent' | 'price-low' | 'price-high' | 'popular';
+type ConditionKey = 'all' | 'new' | 'like-new' | 'excellent' | 'used';
 
-export default function ProductsView({ tradespaceId }: { tradespaceId: string }) {
-  const [sort, setSort] = useState<SortKey>("recent");
-  const [condition, setCondition] = useState<ConditionKey>("all");
+export default function ProductsView({
+  tradespaceId,
+}: {
+  tradespaceId: string;
+}) {
+  const [sort, setSort] = useState<SortKey>('recent');
+  const [condition, setCondition] = useState<ConditionKey>('all');
 
   const [products, setProducts] = useState<Array<Product>>([]);
   const [loading, setLoading] = useState(true);
@@ -90,9 +93,9 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
     setLoading(true);
 
     const q = query(
-      collection(db, "tradespaces", tradespaceId, "listings"),
+      collection(db, 'tradespaces', tradespaceId, 'listings'),
       // backfill
-      orderBy("dateCreated", "desc"),
+      orderBy('dateCreated', 'desc'),
       limit(60),
     );
 
@@ -101,18 +104,34 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
       (snap) => {
         const rows: Array<Product> = snap.docs.map((d) => {
           const data = d.data() as ListingDoc;
-          const createdAtMs = data.dateCreated ? data.dateCreated.toMillis() : undefined;
+          const createdAtMs = data.dateCreated
+            ? data.dateCreated.toMillis()
+            : undefined;
 
           return {
             id: d.id,
-            title: typeof data.title === "string" && data.title.length ? data.title : "Untitled listing",
-            price: typeof data.price === "number" ? data.price : (typeof data.price === "string" ? Number(data.price) || 0 : 0),
-            condition: typeof data.condition === "string" && data.condition.length ? data.condition : "Used",
-            seller: typeof data.sellerName === "string" && data.sellerName.length ? data.sellerName : "Unknown",
+            title:
+              typeof data.title === 'string' && data.title.length
+                ? data.title
+                : 'Untitled listing',
+            price:
+              typeof data.price === 'number'
+                ? data.price
+                : typeof data.price === 'string'
+                  ? Number(data.price) || 0
+                  : 0,
+            condition:
+              typeof data.condition === 'string' && data.condition.length
+                ? data.condition
+                : 'Used',
+            seller:
+              typeof data.sellerName === 'string' && data.sellerName.length
+                ? data.sellerName
+                : 'Unknown',
             imageUrl: firstImage(data.imageUrls),
             postedAt: timeAgo(createdAtMs),
             tags: Array.isArray(data.tags) ? data.tags : [],
-            offers: typeof data.offers === "number" ? data.offers : undefined,
+            offers: typeof data.offers === 'number' ? data.offers : undefined,
             createdAtMs,
           };
         });
@@ -121,7 +140,7 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
         setLoading(false);
       },
       (err) => {
-        console.error("Error loading listings:", err);
+        console.error('Error loading listings:', err);
         setProducts([]);
         setLoading(false);
       },
@@ -130,18 +149,20 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
     return () => unsub();
   }, [tradespaceId]);
 
-  // Filter + Sort 
+  // Filter + Sort
   const filteredAndSorted = useMemo(() => {
     let list = [...products];
 
-    if (condition !== "all") {
+    if (condition !== 'all') {
       list = list.filter((p) => normalizeCondition(p.condition) === condition);
     }
 
-    if (sort === "recent") list.sort((a, b) => (b.createdAtMs ?? 0) - (a.createdAtMs ?? 0));
-    if (sort === "price-low") list.sort((a, b) => a.price - b.price);
-    if (sort === "price-high") list.sort((a, b) => b.price - a.price);
-    if (sort === "popular") list.sort((a, b) => (b.offers ?? 0) - (a.offers ?? 0));
+    if (sort === 'recent')
+      list.sort((a, b) => (b.createdAtMs ?? 0) - (a.createdAtMs ?? 0));
+    if (sort === 'price-low') list.sort((a, b) => a.price - b.price);
+    if (sort === 'price-high') list.sort((a, b) => b.price - a.price);
+    if (sort === 'popular')
+      list.sort((a, b) => (b.offers ?? 0) - (a.offers ?? 0));
 
     return list;
   }, [products, condition, sort]);
@@ -172,10 +193,10 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
             Browse and list products in this tradespace
           </p>
         </div>
-       <Button className="gap-2" onClick={() => setIsAddOpen(true)}>
-            <Plus className="size-4" />
-            List Product
-            </Button>
+        <Button className="gap-2" onClick={() => setIsAddOpen(true)}>
+          <Plus className="size-4" />
+          List Product
+        </Button>
       </div>
 
       {/* Filters */}
@@ -192,7 +213,10 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
           </SelectContent>
         </Select>
 
-        <Select value={condition} onValueChange={(v) => setCondition(v as ConditionKey)}>
+        <Select
+          value={condition}
+          onValueChange={(v) => setCondition(v as ConditionKey)}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Condition" />
           </SelectTrigger>
@@ -220,7 +244,7 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Active Listings</p>
-              <p className="text-2xl">{loading ? "…" : activeListings}</p>
+              <p className="text-2xl">{loading ? '…' : activeListings}</p>
             </div>
           </div>
         </Card>
@@ -232,7 +256,7 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Avg. Price</p>
-              <p className="text-2xl">{loading ? "…" : `$${avgPrice}`}</p>
+              <p className="text-2xl">{loading ? '…' : `$${avgPrice}`}</p>
             </div>
           </div>
         </Card>
@@ -244,7 +268,7 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
             </div>
             <div>
               <p className="text-sm text-muted-foreground">New Today</p>
-              <p className="text-2xl">{loading ? "…" : newToday}</p>
+              <p className="text-2xl">{loading ? '…' : newToday}</p>
             </div>
           </div>
         </Card>
@@ -290,7 +314,9 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-2xl text-primary">${product.price}</p>
-                    <p className="text-xs text-muted-foreground">{product.condition}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {product.condition}
+                    </p>
                   </div>
                   <Button size="sm">View Details</Button>
                 </div>
@@ -312,13 +338,12 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
         </Button>
       </div>
 
-        {/* Render add listing */}
-        <AddListingModal
+      {/* Render add listing */}
+      <AddListingModal
         tradespaceId={tradespaceId}
         open={isAddOpen}
         onOpenChange={setIsAddOpen}
-        />
-
+      />
     </div>
   );
 }
