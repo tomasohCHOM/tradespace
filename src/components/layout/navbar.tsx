@@ -9,7 +9,7 @@ export const LayoutNavbar: React.FC = () => {
   const { openMobile, setOpenMobile } = useSidebar();
 
   return (
-    <nav className="w-full fixed p-2 bg-background border-border border-b">
+    <nav className="w-full fixed p-2 z-50 bg-background border-border border-b">
       <div className="flex items-center justify-between max-w-5xl mx-auto">
         <div className="flex gap-2 items-center">
           <Button
