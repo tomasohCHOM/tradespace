@@ -410,7 +410,16 @@ export default function ProductsView({
       />
 
       {/* Listing Details Modal */}
-      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+      <Dialog
+        open={isDetailsOpen}
+        onOpenChange={(open) => {
+          setIsDetailsOpen(open);
+          if (!open) {
+            setSelected(null);
+            setIsEditing(false);
+          }
+        }}
+      >
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl">{selected?.title}</DialogTitle>
@@ -502,7 +511,7 @@ export default function ProductsView({
           {/* Seller Info */}
           <div className="flex items-center gap-3">
             <Avatar className="size-12">
-              <AvatarFallback>{selected!.seller[0] || '?'}</AvatarFallback>
+              <AvatarFallback>{selected?.seller[0] ?? '?'}</AvatarFallback>
             </Avatar>
             <div>
               <p className="text-xs text-muted-foreground">Seller</p>
