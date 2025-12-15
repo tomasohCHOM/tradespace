@@ -1,5 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Clock, DollarSign, Filter, Plus, TrendingUp } from 'lucide-react';
+import { Clock, 
+  DollarSign, 
+  Filter, 
+  Plus, 
+  TrendingUp, 
+  Calendar, 
+  MessageCircle, 
+  Edit, 
+  Trash2, 
+  ShoppingCart } from 'lucide-react';
 import {
   collection,
   limit,
@@ -9,9 +18,18 @@ import {
 } from 'firebase/firestore';
 import type { Timestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ImageWithFallback } from '@/components/ImageWithFallback';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   Select,
   SelectContent,
@@ -21,6 +39,7 @@ import {
 } from '@/components/ui/select';
 
 import { db } from '@/firebase/config';
+import { useAuth } from '@/context/AuthContext';
 
 import AddListingModal from '@/components/listings/AddListingModal';
 
@@ -30,7 +49,10 @@ interface Product {
   price: number;
   condition: string;
   seller: string;
+  sellerId?: string;
   imageUrl: string;
+  imageUrls?: Array<string>;
+  description?: string;
   postedAt: string;
   tags: Array<string>;
   offers?: number;
@@ -44,6 +66,7 @@ type ListingDoc = {
   sellerName?: string;
   sellerId?: string;
   imageUrls?: Array<string> | string;
+  description?: string;
   dateCreated?: Timestamp;
   tags?: Array<string>;
   offers?: number;
@@ -85,6 +108,14 @@ export default function ProductsView({
   const [loading, setLoading] = useState(true);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [selected, setSelected] = useState<Product | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState('');
+  const [editPrice, setEditPrice] = useState<string>('');
+  const [editDescription, setEditDescription] = useState('');
+  
+  const { user } = useAuth();
 
   // firestore feed
   useEffect(() => {
@@ -128,7 +159,10 @@ export default function ProductsView({
               typeof data.sellerName === 'string' && data.sellerName.length
                 ? data.sellerName
                 : 'Unknown',
+            sellerId: typeof data.sellerId === 'string' ? data.sellerId : undefined,
             imageUrl: firstImage(data.imageUrls),
+            imageUrls: Array.isArray(data.imageUrls) ? data.imageUrls : typeof data.imageUrls === 'string' ? [data.imageUrls] : [],
+            description: typeof data.description === 'string' ? data.description : undefined,
             postedAt: timeAgo(createdAtMs),
             tags: Array.isArray(data.tags) ? data.tags : [],
             offers: typeof data.offers === 'number' ? data.offers : undefined,
@@ -318,7 +352,20 @@ export default function ProductsView({
                       {product.condition}
                     </p>
                   </div>
-                  <Button size="sm">View Details</Button>
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      console.debug('Opening details for', product.id, 'sellerId:', product.sellerId, 'currentUser:', user?.uid);
+                      setSelected(product);
+                      setEditTitle(product.title);
+                      setEditPrice(String(product.price));
+                      setEditDescription(product.description ?? '');
+                      setIsEditing(false);
+                      setIsDetailsOpen(true);
+                    }}
+                  >
+                    View Details
+                  </Button>
                 </div>
 
                 <div className="pt-3 border-t flex items-center justify-between text-sm text-muted-foreground">
@@ -344,6 +391,162 @@ export default function ProductsView({
         open={isAddOpen}
         onOpenChange={setIsAddOpen}
       />
+
+      {/* Listing Details Modal */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">{selected?.title}</DialogTitle>
+          </DialogHeader>
+
+          {/* Product Image */}
+          <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+            <ImageWithFallback src={(selected?.imageUrls && selected.imageUrls[0]) || selected?.imageUrl} alt={selected?.title || ''} className="w-full h-full object-cover" />
+          </div>
+
+          {/* Price and Condition */}
+          <div className="flex items-center justify-between mt-4">
+            <div>
+              {!isEditing ? (
+                <>
+                  <p className="text-3xl text-primary mb-1">${selected?.price}</p>
+                  {selected?.condition && <Badge variant="secondary">{selected.condition}</Badge>}
+                </>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <input className="rounded-md border px-3 py-2 w-32" value={editPrice} onChange={(e) => setEditPrice(e.target.value)} />
+                  <Badge variant="secondary">{selected?.condition}</Badge>
+                </div>
+              )}
+            </div>
+            {selected?.offers && (
+              <Badge className="bg-orange-500">{selected.offers} Active Offers</Badge>
+            )}
+          </div>
+
+          <Separator />
+
+          {/* Description */}
+          <div>
+            <h4 className="mb-2">Description</h4>
+            {!isEditing ? (
+              <p className="text-muted-foreground">{selected?.description}</p>
+            ) : (
+              <textarea className="w-full rounded-md border px-3 py-2" value={editDescription} onChange={(e) => setEditDescription(e.target.value)} />
+            )}
+          </div>
+
+          {/* Tags */}
+          <div className="flex items-center gap-2 flex-wrap">
+            {selected?.tags?.map((tag) => (
+              <Badge key={tag} variant="outline">{tag}</Badge>
+            ))}
+          </div>
+
+          <Separator />
+
+          {/* Details */}
+          <div className="grid grid-cols-1 gap-4">
+            <div className="flex items-center gap-2">
+              <Calendar className="size-4 text-muted-foreground" />
+              <div>
+                <p className="text-xs text-muted-foreground">Posted</p>
+                <p className="text-sm">{selected?.postedAt}</p>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Seller Info */}
+          <div className="flex items-center gap-3">
+            <Avatar className="size-12">
+              <AvatarFallback>{selected?.seller?.[0] ?? '?'}</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-xs text-muted-foreground">Seller</p>
+              <p className="text-sm">{selected?.seller}</p>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Action Buttons */}
+          <div className="flex gap-3">
+            {user && selected?.sellerId && user.uid === selected.sellerId ? (
+              <>
+                {!isEditing ? (
+                  <>
+                    <Button className="flex-1 gap-2" onClick={() => setIsEditing(true)}>
+                      <Edit className="size-4" />
+                      Edit Listing
+                    </Button>
+                    <Button variant="destructive" className="flex-1 gap-2" onClick={async () => {
+                      const ok = confirm('Delete this listing? This cannot be undone.');
+                      if (!ok) return;
+                      try {
+                        const { deleteDoc, doc } = await import('firebase/firestore');
+                        await deleteDoc(doc(db, 'tradespaces', tradespaceId, 'listings', selected?.id));
+                        setProducts((prev) => prev.filter((p) => p.id !== selected?.id));
+                        setIsDetailsOpen(false);
+                      } catch (err) {
+                        console.error('Delete failed', err);
+                        alert('Failed to delete listing');
+                      }
+                    }}>
+                      <Trash2 className="size-4" />
+                      Delete Listing
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button className="flex-1 gap-2" onClick={async () => {
+                      try {
+                        const { updateDoc, doc } = await import('firebase/firestore');
+                        await updateDoc(doc(db, 'tradespaces', tradespaceId, 'listings', selected?.id), {
+                          title: editTitle,
+                          price: Number(editPrice) || 0,
+                          description: editDescription,
+                        });
+                        setProducts((prev) => prev.map((p) => p.id === selected?.id ? { ...p, title: editTitle, price: Number(editPrice) || 0, description: editDescription } : p));
+                        setIsEditing(false);
+                      } catch (err) {
+                        console.error('Failed to save listing edits', err);
+                        alert('Failed to save edits');
+                      }
+                    }}>
+                      Save
+                    </Button>
+                    <Button variant="outline" className="flex-1 gap-2" onClick={() => {
+                      setIsEditing(false);
+                      setEditTitle(selected?.title ?? '');
+                      setEditPrice(String(selected?.price ?? ''));
+                      setEditDescription(selected?.description ?? '');
+                    }}>
+                      Cancel
+                    </Button>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <Button className="flex-1 gap-2" onClick={() => alert('Buy clicked')}>
+                  <ShoppingCart className="size-4" />
+                  Buy Now
+                </Button>
+                <Button variant="outline" className="flex-1 gap-2" onClick={() => alert('Make offer')}>
+                  <MessageCircle className="size-4" />
+                  Make Offer
+                </Button>
+              </>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setIsDetailsOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
