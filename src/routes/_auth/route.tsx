@@ -1,6 +1,8 @@
 import { Outlet, createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import type { Tradespace } from '@/types/tradespace';
 import { useAuth } from '@/context/AuthContext';
+import { getUserTradespaces } from '@/api/getUserTradespaces';
 
 import { PageContent } from '@/components/layout/content';
 import { LayoutNavbar } from '@/components/layout/navbar';
@@ -14,6 +16,7 @@ export const Route = createFileRoute('/_auth')({
 function WorkspaceLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const [tradespaces, setTradespaces] = useState<Array<Tradespace>>([]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -29,19 +32,26 @@ function WorkspaceLayout() {
     );
   }
 
-  if (!user) {
-    return null; // Will redirect in useEffect
+   useEffect(() => {
+    if (!user) return;
+
+    getUserTradespaces(user.uid).then(setTradespaces);
+  }, [user]);
+
+ if (loading) {
+    return <div className="flex h-screen items-center justify-center">Loading...</div>;
   }
 
+   if (!user) return null;
+
   return (
-    <div>
-      <SidebarProvider>
-        <LayoutNavbar />
-        <LayoutSidebar tradespaces={['TechContent']} />
-        <PageContent>
-          <Outlet />
-        </PageContent>
-      </SidebarProvider>
-    </div>
+    <SidebarProvider>
+      <LayoutNavbar />
+      {/* pass tradespaces from firebase */}
+      <LayoutSidebar tradespaces={tradespaces} />
+      <PageContent>
+        <Outlet />
+      </PageContent>
+    </SidebarProvider>
   );
 }

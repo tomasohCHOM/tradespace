@@ -47,11 +47,7 @@ const SidebarNavSection: React.FC<SidebarNavSectionProps> = ({
           const isActive = !!matchRoute({ to: item.url });
           return (
             <SidebarMenuItem key={item.url}>
-              <SidebarMenuButton
-                className="transition"
-                isActive={isActive}
-                asChild
-              >
+              <SidebarMenuButton className="transition" isActive={isActive} asChild>
                 <Link to={item.url}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
@@ -65,8 +61,14 @@ const SidebarNavSection: React.FC<SidebarNavSectionProps> = ({
   </SidebarGroup>
 );
 
+// Tradespace object with Firestore doc id
+export type TradespaceNavItem = {
+  id: string;
+  name: string;
+};
+
 interface TradespaceSectionProps {
-  tradespace: string;
+  tradespace: TradespaceNavItem;
   matchRoute: ReturnType<typeof useMatchRoute>;
 }
 
@@ -76,15 +78,16 @@ const TradespaceSection: React.FC<TradespaceSectionProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const sections: Array<NavItem> = [
-    { title: 'Products', url: `/${tradespace}/products`, icon: ShoppingBag },
-    { title: 'Forums', url: `/${tradespace}/forums`, icon: MessageSquare },
-    { title: 'Topics', url: `/${tradespace}/topics`, icon: FileText },
-  ];
+// tradespace routes
+const productsTo = "/tradespaces/$tradespaceId/products" as const;
+const forumsTo = "/tradespaces/$tradespaceId/forums" as const;
+const topicsTo = "/tradespaces/$tradespaceId/topics" as const;
 
-  const isAnyChildActive = sections.some((section) =>
-    matchRoute({ to: section.url }),
-  );
+
+  const isAnyChildActive =
+    !!matchRoute({ to: productsTo, params: { tradespaceId: tradespace.id } }) ||
+    !!matchRoute({ to: forumsTo, params: { tradespaceId: tradespace.id } }) ||
+    !!matchRoute({ to: topicsTo, params: { tradespaceId: tradespace.id } });
 
   return (
     <SidebarGroup className="gap-1">
@@ -102,29 +105,64 @@ const TradespaceSection: React.FC<TradespaceSectionProps> = ({
               isOpen ? 'rotate-90' : 'rotate-0'
             }`}
           />
-          <span className="flex-1 text-left">{tradespace}</span>
+          {/* tradespace name */}
+          <span className="flex-1 text-left">{tradespace.name}</span>
         </button>
       </SidebarGroupLabel>
+
       {isOpen && (
         <SidebarGroupContent>
           <SidebarMenu className="gap-1 ml-2">
-            {sections.map((section) => {
-              const isActive = matchRoute({ to: section.url });
-              return (
-                <SidebarMenuItem key={section.url}>
-                  <SidebarMenuButton
-                    className="transition pl-4"
-                    isActive={isActive}
-                    asChild
-                  >
-                    <Link to={section.url}>
-                      {section.icon && <section.icon />}
-                      <span>{section.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              );
-            })}
+            {/* Products */}
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                className="transition pl-4"
+                isActive={!!matchRoute({
+                  to: productsTo,
+                  params: { tradespaceId: tradespace.id },
+                })}
+                asChild
+              >
+                <Link to={productsTo} params={{ tradespaceId: tradespace.id }}>
+                  <ShoppingBag />
+                  <span>Products</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            {/* Forums */}
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                className="transition pl-4"
+                isActive={!!matchRoute({
+                  to: forumsTo,
+                  params: { tradespaceId: tradespace.id },
+                })}
+                asChild
+              >
+                <Link to={forumsTo} params={{ tradespaceId: tradespace.id }}>
+                  <MessageSquare />
+                  <span>Forums</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            {/* Topics */}
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                className="transition pl-4"
+                isActive={!!matchRoute({
+                  to: topicsTo,
+                  params: { tradespaceId: tradespace.id },
+                })}
+                asChild
+              >
+                <Link to={topicsTo} params={{ tradespaceId: tradespace.id }}>
+                  <FileText />
+                  <span>Topics</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>
       )}
@@ -133,7 +171,7 @@ const TradespaceSection: React.FC<TradespaceSectionProps> = ({
 };
 
 type Props = {
-  tradespaces: Array<string>;
+  tradespaces: Array<TradespaceNavItem>;
 };
 
 export const LayoutSidebar: React.FC<Props> = ({ tradespaces }) => {
@@ -162,7 +200,7 @@ export const LayoutSidebar: React.FC<Props> = ({ tradespaces }) => {
               <SidebarGroupContent className="space-y-1">
                 {tradespaces.map((tradespace) => (
                   <TradespaceSection
-                    key={tradespace}
+                    key={tradespace.id}
                     tradespace={tradespace}
                     matchRoute={matchRoute}
                   />
