@@ -106,7 +106,7 @@ export default function ProductsView({ tradespaceId }: { tradespaceId: string })
           return {
             id: d.id,
             title: typeof data.title === "string" && data.title.length ? data.title : "Untitled listing",
-            price: typeof data.price === "number" ? data.price : Number(data.price ?? 0),
+            price: typeof data.price === "number" ? data.price : (typeof data.price === "string" ? Number(data.price) || 0 : 0),
             condition: typeof data.condition === "string" && data.condition.length ? data.condition : "Used",
             seller: typeof data.sellerName === "string" && data.sellerName.length ? data.sellerName : "Unknown",
             imageUrl: firstImage(data.imageUrls),
