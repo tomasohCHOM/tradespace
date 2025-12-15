@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { collection, onSnapshot, query } from "firebase/firestore";
-import { db } from "@/firebase/config";
+import { Minus, Plus, ShoppingBag, Tag, Trash2, TrendingUp } from "lucide-react";
+import { auth, db  } from "@/firebase/config";
 import { useAuth } from "@/context/AuthContext";
-import { auth } from "@/firebase/config";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
-import { Trash2, Plus, Minus, ShoppingBag, Tag, TrendingUp } from "lucide-react";
 import { removeCartItem } from "@/api/cart/removeCartItem";
 import { updateCartQuantity } from "@/api/cart/updateCartQuantity";
 import { buildInvoicePdf, downloadPdf } from "@/lib/invoicePdf";
@@ -27,14 +27,14 @@ type CartItem = {
 
 export default function ShoppingCartView() {
   const { user } = useAuth();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<Array<CartItem>>([]);
 
   useEffect(() => {
     if (!user) return;
 
     const q = query(collection(db, "users", user.uid, "cartItems"));
     const unsub = onSnapshot(q, (snap) => {
-      const items = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) })) as CartItem[];
+      const items = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) })) as Array<CartItem>;
       setCartItems(items);
     });
 

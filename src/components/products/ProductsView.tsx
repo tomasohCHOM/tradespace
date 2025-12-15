@@ -18,6 +18,7 @@ import {
   orderBy,
   query,
 } from 'firebase/firestore';
+import { useNavigate } from "@tanstack/react-router";
 import type { Timestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import {
@@ -41,7 +42,6 @@ import {
 } from '@/components/ui/select';
 
 import { addToCart } from "@/api/cart/addToCart";
-import { useNavigate } from "@tanstack/react-router";
 
 import { db } from '@/firebase/config';
 import { useAuth } from '@/context/AuthContext';

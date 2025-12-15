@@ -13,7 +13,7 @@ export type BuildInvoiceOpts = {
   invoiceNumber: string;
   buyerName: string;
   buyerEmail?: string;
-  items: InvoiceItem[];
+  items: Array<InvoiceItem>;
   subtotal: number;
   tax: number;
   shipping: number;
@@ -33,7 +33,7 @@ async function fetchBytes(url: string): Promise<Uint8Array> {
 
 function wrapText(text: string, maxChars: number) {
   const words = (text ?? "").split(/\s+/).filter(Boolean);
-  const lines: string[] = [];
+  const lines: Array<string> = [];
   let line = "";
 
   for (const w of words) {
