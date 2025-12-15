@@ -19,6 +19,9 @@ import type { Tradespace } from '@/types/tradespace';
 import { getUserTradespaces } from '@/api/getUserTradespaces';
 import { useAuth } from '@/context/AuthContext';
 
+// Import Virtual Assistant
+import VirtualAssistant from '../../components/VirtualAssistant';
+
 export const Route = createFileRoute('/_auth/search')({
   component: SearchPage,
 });
@@ -29,7 +32,6 @@ function SearchPage() {
   const [userTradespaces, setUserTradespaces] = useState<Array<Tradespace>>([]);
   const [loading, setLoading] = useState(true);
 
-  // Create form state
   const [openCreate, setOpenCreate] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -109,13 +111,11 @@ function SearchPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl">Discover Tradespaces</h2>
-
         <Button onClick={() => setOpenCreate(true)} className="gap-2">
           <Plus className="size-4" /> Create Tradespace
         </Button>
       </div>
 
-      {/* Create Tradespace Modal */}
       {openCreate && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <Card className="p-6 w-[400px] space-y-4 z-50 relative">
@@ -149,13 +149,11 @@ function SearchPage() {
         </div>
       )}
 
-      {/* Search Bar */}
       <div className="relative mb-6">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
         <Input placeholder="Search tradespaces..." className="pl-10" />
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         <Card className="p-4 flex items-center gap-3">
           <ShoppingBag className="size-5 text-blue-600" />
@@ -186,7 +184,6 @@ function SearchPage() {
         </Card>
       </div>
 
-      {/* Trending */}
       <div className="mb-8">
         <h3 className="text-lg flex items-center gap-2 mb-4">
           <TrendingUp className="size-5 text-orange-600" />
@@ -195,28 +192,23 @@ function SearchPage() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {trending.map((ts) => (
-            <TradespaceCard
-              key={ts.id}
-              tradespace={ts}
-              joined={joinedIds.has(ts.id)}
-            />
+            <TradespaceCard key={ts.id} tradespace={ts} joined={joinedIds.has(ts.id)} />
           ))}
         </div>
       </div>
 
-      {/* All Tradespaces */}
       <div>
         <h3 className="text-lg mb-4">All Tradespaces</h3>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {standard.map((ts) => (
-            <TradespaceCard
-              key={ts.id}
-              tradespace={ts}
-              joined={joinedIds.has(ts.id)}
-            />
+            <TradespaceCard key={ts.id} tradespace={ts} joined={joinedIds.has(ts.id)} />
           ))}
         </div>
       </div>
+
+      {/* Add Virtual Assistant */}
+      <VirtualAssistant />
     </div>
   );
 }
+

@@ -16,40 +16,37 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthSearchRouteImport } from './routes/_auth/search'
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
 import { Route as AuthTradespacesRouteRouteImport } from './routes/_auth/tradespaces/route'
+import { Route as AuthTradespacesTradespaceIdRouteImport } from './routes/_auth/tradespaces/$tradespaceId'
 import { Route as AuthTradespacesTradespaceIdRouteRouteImport } from './routes/_auth/tradespaces/$tradespaceId/route'
 import { Route as AuthTradespacesTradespaceIdTopicsRouteImport } from './routes/_auth/tradespaces/$tradespaceId/topics'
 import { Route as AuthTradespacesTradespaceIdProductsRouteImport } from './routes/_auth/tradespaces/$tradespaceId/products'
 import { Route as AuthTradespacesTradespaceIdForumsRouteImport } from './routes/_auth/tradespaces/$tradespaceId/forums'
+import { Route as AuthTradespacesTradespaceIdThreadThreadIdRouteImport } from './routes/_auth/tradespaces/$tradespaceId/thread/$threadId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
-
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-
 const AuthSearchRoute = AuthSearchRouteImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-
 const AuthDashboardRoute = AuthDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -60,6 +57,12 @@ const AuthTradespacesRouteRoute = AuthTradespacesRouteRouteImport.update({
   path: '/tradespaces',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AuthTradespacesTradespaceIdRoute =
+  AuthTradespacesTradespaceIdRouteImport.update({
+    id: '/$tradespaceId',
+    path: '/$tradespaceId',
+    getParentRoute: () => AuthTradespacesRouteRoute,
+  } as any)
 const AuthTradespacesTradespaceIdRouteRoute =
   AuthTradespacesTradespaceIdRouteRouteImport.update({
     id: '/$tradespaceId',
@@ -70,19 +73,25 @@ const AuthTradespacesTradespaceIdTopicsRoute =
   AuthTradespacesTradespaceIdTopicsRouteImport.update({
     id: '/topics',
     path: '/topics',
-    getParentRoute: () => AuthTradespacesTradespaceIdRouteRoute,
+    getParentRoute: () => AuthTradespacesTradespaceIdRoute,
   } as any)
 const AuthTradespacesTradespaceIdProductsRoute =
   AuthTradespacesTradespaceIdProductsRouteImport.update({
     id: '/products',
     path: '/products',
-    getParentRoute: () => AuthTradespacesTradespaceIdRouteRoute,
+    getParentRoute: () => AuthTradespacesTradespaceIdRoute,
   } as any)
 const AuthTradespacesTradespaceIdForumsRoute =
   AuthTradespacesTradespaceIdForumsRouteImport.update({
     id: '/forums',
     path: '/forums',
-    getParentRoute: () => AuthTradespacesTradespaceIdRouteRoute,
+    getParentRoute: () => AuthTradespacesTradespaceIdRoute,
+  } as any)
+const AuthTradespacesTradespaceIdThreadThreadIdRoute =
+  AuthTradespacesTradespaceIdThreadThreadIdRouteImport.update({
+    id: '/thread/$threadId',
+    path: '/thread/$threadId',
+    getParentRoute: () => AuthTradespacesTradespaceIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -92,10 +101,11 @@ export interface FileRoutesByFullPath {
   '/tradespaces': typeof AuthTradespacesRouteRouteWithChildren
   '/dashboard': typeof AuthDashboardRoute
   '/search': typeof AuthSearchRoute
-  '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
+  '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteWithChildren
   '/tradespaces/$tradespaceId/forums': typeof AuthTradespacesTradespaceIdForumsRoute
   '/tradespaces/$tradespaceId/products': typeof AuthTradespacesTradespaceIdProductsRoute
   '/tradespaces/$tradespaceId/topics': typeof AuthTradespacesTradespaceIdTopicsRoute
+  '/tradespaces/$tradespaceId/thread/$threadId': typeof AuthTradespacesTradespaceIdThreadThreadIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -104,10 +114,11 @@ export interface FileRoutesByTo {
   '/tradespaces': typeof AuthTradespacesRouteRouteWithChildren
   '/dashboard': typeof AuthDashboardRoute
   '/search': typeof AuthSearchRoute
-  '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
+  '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteWithChildren
   '/tradespaces/$tradespaceId/forums': typeof AuthTradespacesTradespaceIdForumsRoute
   '/tradespaces/$tradespaceId/products': typeof AuthTradespacesTradespaceIdProductsRoute
   '/tradespaces/$tradespaceId/topics': typeof AuthTradespacesTradespaceIdTopicsRoute
+  '/tradespaces/$tradespaceId/thread/$threadId': typeof AuthTradespacesTradespaceIdThreadThreadIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -118,10 +129,11 @@ export interface FileRoutesById {
   '/_auth/tradespaces': typeof AuthTradespacesRouteRouteWithChildren
   '/_auth/dashboard': typeof AuthDashboardRoute
   '/_auth/search': typeof AuthSearchRoute
-  '/_auth/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
+  '/_auth/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteWithChildren
   '/_auth/tradespaces/$tradespaceId/forums': typeof AuthTradespacesTradespaceIdForumsRoute
   '/_auth/tradespaces/$tradespaceId/products': typeof AuthTradespacesTradespaceIdProductsRoute
   '/_auth/tradespaces/$tradespaceId/topics': typeof AuthTradespacesTradespaceIdTopicsRoute
+  '/_auth/tradespaces/$tradespaceId/thread/$threadId': typeof AuthTradespacesTradespaceIdThreadThreadIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -136,6 +148,7 @@ export interface FileRouteTypes {
     | '/tradespaces/$tradespaceId/forums'
     | '/tradespaces/$tradespaceId/products'
     | '/tradespaces/$tradespaceId/topics'
+    | '/tradespaces/$tradespaceId/thread/$threadId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -148,6 +161,7 @@ export interface FileRouteTypes {
     | '/tradespaces/$tradespaceId/forums'
     | '/tradespaces/$tradespaceId/products'
     | '/tradespaces/$tradespaceId/topics'
+    | '/tradespaces/$tradespaceId/thread/$threadId'
   id:
     | '__root__'
     | '/'
@@ -161,14 +175,14 @@ export interface FileRouteTypes {
     | '/_auth/tradespaces/$tradespaceId/forums'
     | '/_auth/tradespaces/$tradespaceId/products'
     | '/_auth/tradespaces/$tradespaceId/topics'
+    | '/_auth/tradespaces/$tradespaceId/thread/$threadId'
   fileRoutesById: FileRoutesById
 }
-
-const AuthTradespacesTradespaceIdRouteRouteWithChildren =
-  AuthTradespacesTradespaceIdRouteRoute._addFileChildren(AuthTradespacesTradespaceIdRouteRouteChildren)
-
-interface AuthTradespacesRouteRouteChildren {
-  AuthTradespacesTradespaceIdRouteRoute: typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -226,6 +240,13 @@ declare module '@tanstack/react-router' {
       id: '/_auth/tradespaces/$tradespaceId'
       path: '/$tradespaceId'
       fullPath: '/tradespaces/$tradespaceId'
+      preLoaderRoute: typeof AuthTradespacesTradespaceIdRouteImport
+      parentRoute: typeof AuthTradespacesRouteRoute
+    }
+    '/_auth/tradespaces/$tradespaceId': {
+      id: '/_auth/tradespaces/$tradespaceId'
+      path: '/$tradespaceId'
+      fullPath: '/tradespaces/$tradespaceId'
       preLoaderRoute: typeof AuthTradespacesTradespaceIdRouteRouteImport
       parentRoute: typeof AuthTradespacesRouteRoute
     }
@@ -234,32 +255,40 @@ declare module '@tanstack/react-router' {
       path: '/topics'
       fullPath: '/tradespaces/$tradespaceId/topics'
       preLoaderRoute: typeof AuthTradespacesTradespaceIdTopicsRouteImport
-      parentRoute: typeof AuthTradespacesTradespaceIdRouteRoute
+      parentRoute: typeof AuthTradespacesTradespaceIdRoute
     }
     '/_auth/tradespaces/$tradespaceId/products': {
       id: '/_auth/tradespaces/$tradespaceId/products'
       path: '/products'
       fullPath: '/tradespaces/$tradespaceId/products'
       preLoaderRoute: typeof AuthTradespacesTradespaceIdProductsRouteImport
-      parentRoute: typeof AuthTradespacesTradespaceIdRouteRoute
+      parentRoute: typeof AuthTradespacesTradespaceIdRoute
     }
     '/_auth/tradespaces/$tradespaceId/forums': {
       id: '/_auth/tradespaces/$tradespaceId/forums'
       path: '/forums'
       fullPath: '/tradespaces/$tradespaceId/forums'
       preLoaderRoute: typeof AuthTradespacesTradespaceIdForumsRouteImport
-      parentRoute: typeof AuthTradespacesTradespaceIdRouteRoute
+      parentRoute: typeof AuthTradespacesTradespaceIdRoute
+    }
+    '/_auth/tradespaces/$tradespaceId/thread/$threadId': {
+      id: '/_auth/tradespaces/$tradespaceId/thread/$threadId'
+      path: '/thread/$threadId'
+      fullPath: '/tradespaces/$tradespaceId/thread/$threadId'
+      preLoaderRoute: typeof AuthTradespacesTradespaceIdThreadThreadIdRouteImport
+      parentRoute: typeof AuthTradespacesTradespaceIdRoute
     }
   }
 }
 
-interface AuthTradespacesTradespaceIdRouteRouteChildren {
+interface AuthTradespacesTradespaceIdRouteChildren {
   AuthTradespacesTradespaceIdForumsRoute: typeof AuthTradespacesTradespaceIdForumsRoute
   AuthTradespacesTradespaceIdProductsRoute: typeof AuthTradespacesTradespaceIdProductsRoute
   AuthTradespacesTradespaceIdTopicsRoute: typeof AuthTradespacesTradespaceIdTopicsRoute
+  AuthTradespacesTradespaceIdThreadThreadIdRoute: typeof AuthTradespacesTradespaceIdThreadThreadIdRoute
 }
 
-const AuthTradespacesTradespaceIdRouteRouteChildren: AuthTradespacesTradespaceIdRouteRouteChildren =
+const AuthTradespacesTradespaceIdRouteChildren: AuthTradespacesTradespaceIdRouteChildren =
   {
     AuthTradespacesTradespaceIdForumsRoute:
       AuthTradespacesTradespaceIdForumsRoute,
@@ -267,20 +296,24 @@ const AuthTradespacesTradespaceIdRouteRouteChildren: AuthTradespacesTradespaceId
       AuthTradespacesTradespaceIdProductsRoute,
     AuthTradespacesTradespaceIdTopicsRoute:
       AuthTradespacesTradespaceIdTopicsRoute,
+    AuthTradespacesTradespaceIdThreadThreadIdRoute:
+      AuthTradespacesTradespaceIdThreadThreadIdRoute,
   }
 
-const AuthTradespacesTradespaceIdRouteRouteWithChildren =
-  AuthTradespacesTradespaceIdRouteRoute._addFileChildren(
-    AuthTradespacesTradespaceIdRouteRouteChildren,
+const AuthTradespacesTradespaceIdRouteWithChildren =
+  AuthTradespacesTradespaceIdRoute._addFileChildren(
+    AuthTradespacesTradespaceIdRouteChildren,
   )
 
 interface AuthTradespacesRouteRouteChildren {
-  AuthTradespacesTradespaceIdRouteRoute: typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
+  AuthTradespacesTradespaceIdRouteRoute: typeof AuthTradespacesTradespaceIdRouteRoute
+  AuthTradespacesTradespaceIdRoute: typeof AuthTradespacesTradespaceIdRouteWithChildren
 }
 
 const AuthTradespacesRouteRouteChildren: AuthTradespacesRouteRouteChildren = {
-  AuthTradespacesTradespaceIdRouteRoute:
-    AuthTradespacesTradespaceIdRouteRouteWithChildren,
+  AuthTradespacesTradespaceIdRouteRoute: AuthTradespacesTradespaceIdRouteRoute,
+  AuthTradespacesTradespaceIdRoute:
+    AuthTradespacesTradespaceIdRouteWithChildren,
 }
 
 const AuthTradespacesRouteRouteWithChildren =
@@ -298,22 +331,16 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthSearchRoute: AuthSearchRoute,
 }
 
-const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(AuthRouteRouteChildren)
-
-interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  SignupRoute: typeof SignupRoute
-}
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute,
+  IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  LoginRoute,
-  SignupRoute,
+  LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
 }
-
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes()
+  ._addFileTypes<FileRouteTypes>()
