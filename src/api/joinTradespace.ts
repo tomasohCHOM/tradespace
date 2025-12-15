@@ -11,19 +11,26 @@ export async function joinTradespace(tradespaceId: string, uid: string) {
       tx.get(memberRef),
       tx.get(tradespaceRef),
     ]);
+
     if (memberSnap.exists()) return;
     if (!tradespaceSnap.exists()) {
       throw new Error('Tradespace does not exist');
     }
-    const currentCount = tradespaceSnap.data().memberCount ?? 0;
 
+    const data = tradespaceSnap.data();
+    const currentCount = data.memberCount ?? 0;
+
+    // Tradespace membership doc
     tx.set(memberRef, {
       role: 'member',
       joinedAt: Timestamp.now(),
     });
+
+    // include name
     tx.set(userTradespacesRef, {
       role: 'member',
       joinedAt: Timestamp.now(),
+      name: data.name,
     });
 
     tx.update(tradespaceRef, {
