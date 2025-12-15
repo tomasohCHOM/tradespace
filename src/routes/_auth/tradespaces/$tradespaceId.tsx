@@ -32,7 +32,7 @@ export function TradespaceDetailPage() {
 
       // Load listings
       const listingsSnap = await getDocs(
-        collection(db, 'tradespaces', tradespaceId, 'listings')
+        collection(db, 'tradespaces', tradespaceId, 'listings'),
       );
       setListings(listingsSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
 
@@ -49,7 +49,7 @@ export function TradespaceDetailPage() {
   const handleJoinLeave = async () => {
     if (!user || !tradespace) return;
     setLoading(true);
-    
+
     try {
       if (hasJoined) {
         await leaveTradespace(user.uid, tradespaceId);
@@ -132,7 +132,9 @@ export function TradespaceDetailPage() {
                 className="border rounded-lg overflow-hidden bg-white shadow hover:shadow-lg transition-shadow cursor-pointer"
               >
                 <img
-                  src={listing.images?.[0] || 'https://via.placeholder.com/400x300'}
+                  src={
+                    listing.images?.[0] || 'https://via.placeholder.com/400x300'
+                  }
                   alt={listing.title}
                   className="w-full h-48 object-cover"
                 />
@@ -185,8 +187,8 @@ export function TradespaceDetailPage() {
                 <span className="text-gray-400 text-sm">5 hours ago</span>
               </div>
               <p className="text-gray-700">
-                Really interested in the Omega watch. Can you provide more details
-                about its history?
+                Really interested in the Omega watch. Can you provide more
+                details about its history?
               </p>
             </div>
           </div>

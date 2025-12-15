@@ -75,7 +75,7 @@ export async function leaveTradespace(userId: string, tradespaceId: string) {
     // Decrement member count (but don't go below 0)
     const tradespaceSnap = await getDoc(tradespaceRef);
     const currentCount = tradespaceSnap.data()?.memberCount || 0;
-    
+
     if (currentCount > 0) {
       await updateDoc(tradespaceRef, {
         memberCount: increment(-1),

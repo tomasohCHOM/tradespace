@@ -18,7 +18,7 @@ function DashboardPage() {
 
   const loadTradespaces = async () => {
     if (!user) return;
-    
+
     const [userTS, allTS] = await Promise.all([
       getUserTradespaces(user.uid),
       getTradespaces(),
@@ -61,7 +61,8 @@ function DashboardPage() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {userTradespaces.length === 0 ? (
           <p className="text-gray-500 col-span-full">
-            You haven't joined any tradespaces yet. Explore below to get started!
+            You haven't joined any tradespaces yet. Explore below to get
+            started!
           </p>
         ) : (
           userTradespaces.map((ts) => (

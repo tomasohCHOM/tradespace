@@ -5,9 +5,7 @@ import type { Tradespace } from '@/types/tradespace';
 export async function getUserTradespaces(
   uid: string,
 ): Promise<Array<Tradespace>> {
-  const snapshot = await getDocs(
-    collection(db, 'users', uid, 'tradespaces')
-  );
+  const snapshot = await getDocs(collection(db, 'users', uid, 'tradespaces'));
 
   const tradespaces = await Promise.all(
     snapshot.docs.map(async (docSnap) => {
@@ -18,7 +16,7 @@ export async function getUserTradespaces(
         id: tsSnap.id,
         ...tsSnap.data(),
       };
-    })
+    }),
   );
 
   return tradespaces as Array<Tradespace>;
