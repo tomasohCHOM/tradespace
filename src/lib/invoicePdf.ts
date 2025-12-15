@@ -32,7 +32,7 @@ async function fetchBytes(url: string): Promise<Uint8Array> {
 }
 
 function wrapText(text: string, maxChars: number) {
-  const words = (text ?? "").split(/\s+/).filter(Boolean);
+  const words = text.split(/\s+/).filter(Boolean);
   const lines: Array<string> = [];
   let line = "";
 
@@ -74,7 +74,7 @@ export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Arra
     isBold = false,
     color = rgb(0, 0, 0)
   ) => {
-    page.drawText(text ?? "", { x, y: yPos, size, font: isBold ? bold : font, color });
+    page.drawText(text, { x, y: yPos, size, font: isBold ? bold : font, color });
   };
 
   // ===== Header (logo + title)

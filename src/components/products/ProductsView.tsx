@@ -685,7 +685,7 @@ async function handleAddToCart(p: Product) {
                     // take them to cart after adding
                     navigate({ to: "/cart" });
                   }}
-                  disabled={!user || (!!selected?.sellerId && selected.sellerId === user?.uid)}
+                 disabled={!user || (selected?.sellerId === user.uid)}
                 >
                   <ShoppingCart className="size-4" />
                   Add to Cart
