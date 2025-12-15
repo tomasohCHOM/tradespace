@@ -1,16 +1,16 @@
-import { Bell, Mail, Menu, ShoppingBag } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
-import { useSidebar } from '../ui/sidebar'
-import { UserOptions } from './user-options'
-import type React from 'react'
-import { Button } from '@/components/ui/button'
-import { useCartCount } from '@/hooks/useCartCount'
+import { Bell, Mail, Menu, ShoppingBag } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
+import { useSidebar } from '../ui/sidebar';
+import { UserOptions } from './user-options';
+import type React from 'react';
+import { Button } from '@/components/ui/button';
+import { useCartCount } from '@/hooks/useCartCount';
 
 export const LayoutNavbar: React.FC = () => {
-  const { openMobile, setOpenMobile } = useSidebar()
-  const cartCount = useCartCount()
+  const { openMobile, setOpenMobile } = useSidebar();
+  const cartCount = useCartCount();
 
-  const cartTo = '/cart' as const
+  const cartTo = '/cart' as const;
 
   return (
     <nav className="w-full fixed p-2 bg-background border-border border-b">
@@ -53,5 +53,5 @@ export const LayoutNavbar: React.FC = () => {
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};

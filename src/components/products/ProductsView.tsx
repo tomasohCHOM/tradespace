@@ -18,7 +18,7 @@ import {
   orderBy,
   query,
 } from 'firebase/firestore';
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from '@tanstack/react-router';
 import type { Timestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import {
@@ -41,7 +41,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import { addToCart } from "@/api/cart/addToCart";
+import { addToCart } from '@/api/cart/addToCart';
 
 import { db } from '@/firebase/config';
 import { useAuth } from '@/context/AuthContext';
@@ -122,40 +122,39 @@ export default function ProductsView({
 
   const { user } = useAuth();
 
-
   const navigate = useNavigate();
-const [addingId, setAddingId] = useState<string | null>(null);
+  const [addingId, setAddingId] = useState<string | null>(null);
 
-async function handleAddToCart(p: Product) {
-  if (!user) {
-    alert("Please log in to add to cart.");
-    return;
-  }
-  if (p.sellerId && p.sellerId === user.uid) {
-    alert("You can't add your own listing to your cart.");
-    return;
-  }
+  async function handleAddToCart(p: Product) {
+    if (!user) {
+      alert('Please log in to add to cart.');
+      return;
+    }
+    if (p.sellerId && p.sellerId === user.uid) {
+      alert("You can't add your own listing to your cart.");
+      return;
+    }
 
-  setAddingId(p.id);
-  try {
-    await addToCart({
-      uid: user.uid,
-      tradespaceId,
-      listingId: p.id,
-      title: p.title,
-      price: p.price,
-      sellerId: p.sellerId ?? "unknown",
-      sellerName: p.seller,
-      imageUrl: p.imageUrl || null,
-      condition: p.condition,
-    });
-  } catch (err: any) {
-    console.error("Add to cart failed:", err);
-    alert(err?.message ?? "Failed to add to cart");
-  } finally {
-    setAddingId(null);
+    setAddingId(p.id);
+    try {
+      await addToCart({
+        uid: user.uid,
+        tradespaceId,
+        listingId: p.id,
+        title: p.title,
+        price: p.price,
+        sellerId: p.sellerId ?? 'unknown',
+        sellerName: p.seller,
+        imageUrl: p.imageUrl || null,
+        condition: p.condition,
+      });
+    } catch (err: any) {
+      console.error('Add to cart failed:', err);
+      alert(err?.message ?? 'Failed to add to cart');
+    } finally {
+      setAddingId(null);
+    }
   }
-}
 
   // firestore feed
   useEffect(() => {
@@ -402,34 +401,33 @@ async function handleAddToCart(p: Product) {
                   </div>
 
                   <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCart(product);
-                    }}
-                    disabled={!user || addingId === product.id}
-                  >
-                    {addingId === product.id ? "Adding..." : "Add"}
-                  </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product);
+                      }}
+                      disabled={!user || addingId === product.id}
+                    >
+                      {addingId === product.id ? 'Adding...' : 'Add'}
+                    </Button>
 
-                  <Button
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelected(product);
-                      setEditTitle(product.title);
-                      setEditPrice(String(product.price));
-                      setEditDescription(product.description ?? "");
-                      setIsEditing(false);
-                      setIsDetailsOpen(true);
-                    }}
-                  >
-                    View
-                  </Button>
-                </div>
-
+                    <Button
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelected(product);
+                        setEditTitle(product.title);
+                        setEditPrice(String(product.price));
+                        setEditDescription(product.description ?? '');
+                        setIsEditing(false);
+                        setIsDetailsOpen(true);
+                      }}
+                    >
+                      View
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="pt-3 border-t flex items-center justify-between text-sm text-muted-foreground">
@@ -683,14 +681,13 @@ async function handleAddToCart(p: Product) {
                     if (!selected) return;
                     await handleAddToCart(selected);
                     // take them to cart after adding
-                    navigate({ to: "/cart" });
+                    navigate({ to: '/cart' });
                   }}
-                 disabled={!user || (selected?.sellerId === user.uid)}
+                  disabled={!user || selected?.sellerId === user.uid}
                 >
                   <ShoppingCart className="size-4" />
                   Add to Cart
                 </Button>
-
 
                 <Button
                   variant="outline"

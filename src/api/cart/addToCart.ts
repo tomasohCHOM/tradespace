@@ -1,5 +1,5 @@
-import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
-import { db } from "@/firebase/config";
+import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/firebase/config';
 
 export async function addToCart({
   uid,
@@ -23,7 +23,7 @@ export async function addToCart({
   condition: string;
 }) {
   const cartItemId = `${tradespaceId}_${listingId}`;
-  const ref = doc(db, "users", uid, "cartItems", cartItemId);
+  const ref = doc(db, 'users', uid, 'cartItems', cartItemId);
 
   await runTransaction(db, async (tx) => {
     const snap = await tx.get(ref);

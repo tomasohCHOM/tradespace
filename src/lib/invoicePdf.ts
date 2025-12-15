@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
 export type InvoiceItem = {
   title: string;
@@ -21,7 +21,7 @@ export type BuildInvoiceOpts = {
   date: Date;
 
   // Branding (optional)
-  logoUrl?: string;   // e.g. "/logo.png" or hosted URL
+  logoUrl?: string; // e.g. "/logo.png" or hosted URL
   brandName?: string; // defaults to "TradeSpace"
 };
 
@@ -34,7 +34,7 @@ async function fetchBytes(url: string): Promise<Uint8Array> {
 function wrapText(text: string, maxChars: number) {
   const words = text.split(/\s+/).filter(Boolean);
   const lines: Array<string> = [];
-  let line = "";
+  let line = '';
 
   for (const w of words) {
     const next = line ? `${line} ${w}` : w;
@@ -55,7 +55,9 @@ function money(n: number) {
   return `$${v.toFixed(2)}`;
 }
 
-export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Array> {
+export async function buildInvoicePdf(
+  opts: BuildInvoiceOpts,
+): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([612, 792]); // Letter
   const { width, height } = page.getSize();
@@ -72,9 +74,15 @@ export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Arra
     yPos: number,
     size = 11,
     isBold = false,
-    color = rgb(0, 0, 0)
+    color = rgb(0, 0, 0),
   ) => {
-    page.drawText(text, { x, y: yPos, size, font: isBold ? bold : font, color });
+    page.drawText(text, {
+      x,
+      y: yPos,
+      size,
+      font: isBold ? bold : font,
+      color,
+    });
   };
 
   // ===== Header (logo + title)
@@ -113,23 +121,29 @@ export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Arra
         height: logoH,
       });
     } catch (e) {
-      console.warn("Logo embed failed (likely CORS or missing file):", e);
+      console.warn('Logo embed failed (likely CORS or missing file):', e);
     }
   }
 
-  const brand = opts.brandName ?? "TradeSpace";
+  const brand = opts.brandName ?? 'TradeSpace';
   drawText(brand, margin + 150, y - 22, 18, true);
-  drawText("Invoice", margin + 150, y - 44, 12, false, rgb(0.35, 0.35, 0.38));
+  drawText('Invoice', margin + 150, y - 44, 12, false, rgb(0.35, 0.35, 0.38));
 
   // Right-side meta
-  drawText(`Invoice: ${opts.invoiceNumber}`, width - margin - 220, y - 24, 11, true);
+  drawText(
+    `Invoice: ${opts.invoiceNumber}`,
+    width - margin - 220,
+    y - 24,
+    11,
+    true,
+  );
   drawText(
     `Date: ${opts.date.toLocaleString()}`,
     width - margin - 220,
     y - 40,
     10,
     false,
-    rgb(0.35, 0.35, 0.38)
+    rgb(0.35, 0.35, 0.38),
   );
 
   y -= headerH + 16;
@@ -145,16 +159,23 @@ export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Arra
     color: rgb(1, 1, 1),
   });
 
-  drawText("Billed To", margin + 12, y - 18, 11, true);
+  drawText('Billed To', margin + 12, y - 18, 11, true);
   drawText(opts.buyerName, margin + 12, y - 36, 11, false);
   if (opts.buyerEmail) {
-    drawText(opts.buyerEmail, margin + 12, y - 52, 10, false, rgb(0.35, 0.35, 0.38));
+    drawText(
+      opts.buyerEmail,
+      margin + 12,
+      y - 52,
+      10,
+      false,
+      rgb(0.35, 0.35, 0.38),
+    );
   }
 
   y -= 80;
 
   // ===== Items header
-  drawText("Items", margin, y, 13, true);
+  drawText('Items', margin, y, 13, true);
   y -= 14;
 
   // Column layout
@@ -178,10 +199,10 @@ export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Arra
     borderWidth: 1,
   });
 
-  drawText("Product", colX.title, y - 16, 10, true);
-  drawText("Qty", colX.qty, y - 16, 10, true);
-  drawText("Unit", colX.unit, y - 16, 10, true);
-  drawText("Line", colX.total, y - 16, 10, true);
+  drawText('Product', colX.title, y - 16, 10, true);
+  drawText('Qty', colX.qty, y - 16, 10, true);
+  drawText('Unit', colX.unit, y - 16, 10, true);
+  drawText('Line', colX.total, y - 16, 10, true);
 
   y -= 32;
 
@@ -195,7 +216,9 @@ export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Arra
 
     // page-break (single-page mode)
     if (y - rowH < margin + 150) {
-      throw new Error("Invoice too long for 1 page. Ask me for multi-page support.");
+      throw new Error(
+        'Invoice too long for 1 page. Ask me for multi-page support.',
+      );
     }
 
     // row background
@@ -240,7 +263,7 @@ export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Arra
 
         page.drawImage(img, { x, y: yImg, width: w, height: h });
       } catch (e) {
-        console.warn("Item image embed failed (likely CORS):", e);
+        console.warn('Item image embed failed (likely CORS):', e);
       }
     }
 
@@ -249,7 +272,7 @@ export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Arra
     const titleY1 = y - 20;
     const titleY2 = y - 34;
 
-    drawText(titleLines[0] ?? "", colX.title, titleY1, 11, true);
+    drawText(titleLines[0] ?? '', colX.title, titleY1, 11, true);
     if (titleLines[1]) {
       drawText(titleLines[1], colX.title, titleY2, 11, true);
     }
@@ -262,9 +285,10 @@ export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Arra
       it.sellerName ? `Seller: ${it.sellerName}` : null,
     ]
       .filter(Boolean)
-      .join(" • ");
+      .join(' • ');
 
-    if (meta) drawText(meta, colX.title, metaY, 9, false, rgb(0.35, 0.35, 0.38));
+    if (meta)
+      drawText(meta, colX.title, metaY, 9, false, rgb(0.35, 0.35, 0.38));
 
     // Numbers
     drawText(String(qty), colX.qty, y - 28, 11);
@@ -297,9 +321,9 @@ export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Arra
     ty -= 18;
   };
 
-  totalsLine("Subtotal", money(opts.subtotal));
-  totalsLine("Shipping", money(opts.shipping));
-  totalsLine("Tax", money(opts.tax));
+  totalsLine('Subtotal', money(opts.subtotal));
+  totalsLine('Shipping', money(opts.shipping));
+  totalsLine('Tax', money(opts.tax));
 
   page.drawLine({
     start: { x: tx, y: ty + 6 },
@@ -309,16 +333,16 @@ export async function buildInvoicePdf(opts: BuildInvoiceOpts): Promise<Uint8Arra
   });
 
   ty -= 10;
-  totalsLine("TOTAL", money(opts.total), true);
+  totalsLine('TOTAL', money(opts.total), true);
 
   // Footer
   drawText(
-    "Thank you for your purchase!",
+    'Thank you for your purchase!',
     margin,
     margin - 6,
     10,
     true,
-    rgb(0.35, 0.35, 0.38)
+    rgb(0.35, 0.35, 0.38),
   );
 
   return await pdfDoc.save(); // Uint8Array
@@ -331,15 +355,13 @@ export function downloadPdf(bytes: Uint8Array, filename: string) {
 
   const ab: ArrayBuffer = copy.buffer;
 
-  const blob = new Blob([ab], { type: "application/pdf" });
+  const blob = new Blob([ab], { type: 'application/pdf' });
   const url = URL.createObjectURL(blob);
 
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = url;
   a.download = filename;
   a.click();
 
   URL.revokeObjectURL(url);
 }
-
-

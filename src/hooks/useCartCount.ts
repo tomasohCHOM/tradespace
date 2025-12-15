@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "@/firebase/config";
-import { useAuth } from "@/context/AuthContext";
+import { useEffect, useState } from 'react';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '@/firebase/config';
+import { useAuth } from '@/context/AuthContext';
 
 export function useCartCount() {
   const { user } = useAuth();
@@ -12,7 +12,7 @@ export function useCartCount() {
       setCount(0);
       return;
     }
-    const ref = collection(db, "users", user.uid, "cartItems");
+    const ref = collection(db, 'users', user.uid, 'cartItems');
     return onSnapshot(ref, (snap) => setCount(snap.size));
   }, [user]);
 

@@ -1,20 +1,27 @@
-import { useEffect, useMemo, useState } from "react";
-import { collection, onSnapshot, query } from "firebase/firestore";
-import { Minus, Plus, ShoppingBag, Tag, Trash2, TrendingUp } from "lucide-react";
-import { auth, db  } from "@/firebase/config";
-import { useAuth } from "@/context/AuthContext";
+import { useEffect, useMemo, useState } from 'react';
+import { collection, onSnapshot, query } from 'firebase/firestore';
+import {
+  Minus,
+  Plus,
+  ShoppingBag,
+  Tag,
+  Trash2,
+  TrendingUp,
+} from 'lucide-react';
+import { auth, db } from '@/firebase/config';
+import { useAuth } from '@/context/AuthContext';
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { ImageWithFallback } from "@/components/ImageWithFallback";
-import { removeCartItem } from "@/api/cart/removeCartItem";
-import { updateCartQuantity } from "@/api/cart/updateCartQuantity";
-import { buildInvoicePdf, downloadPdf } from "@/lib/invoicePdf";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { ImageWithFallback } from '@/components/ImageWithFallback';
+import { removeCartItem } from '@/api/cart/removeCartItem';
+import { updateCartQuantity } from '@/api/cart/updateCartQuantity';
+import { buildInvoicePdf, downloadPdf } from '@/lib/invoicePdf';
 
 type CartItem = {
-  id: string;            // doc id
+  id: string; // doc id
   listingId: string;
   tradespaceId: string;
   title: string;
@@ -32,9 +39,12 @@ export default function ShoppingCartView() {
   useEffect(() => {
     if (!user) return;
 
-    const q = query(collection(db, "users", user.uid, "cartItems"));
+    const q = query(collection(db, 'users', user.uid, 'cartItems'));
     const unsub = onSnapshot(q, (snap) => {
-      const items = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) })) as Array<CartItem>;
+      const items = snap.docs.map((d) => ({
+        id: d.id,
+        ...(d.data() as any),
+      })) as Array<CartItem>;
       setCartItems(items);
     });
 
@@ -43,7 +53,7 @@ export default function ShoppingCartView() {
 
   const subtotal = useMemo(
     () => cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
-    [cartItems]
+    [cartItems],
   );
   const tax = subtotal * 0.08;
   const shipping = cartItems.length > 0 ? 9.99 : 0;
@@ -63,41 +73,40 @@ export default function ShoppingCartView() {
     await removeCartItem(user.uid, itemId);
   };
 
-async function handleCheckout() {
-  const currentUser = auth.currentUser;
-  if (!currentUser) {
-    alert("Please log in to checkout.");
-    return;
+  async function handleCheckout() {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      alert('Please log in to checkout.');
+      return;
+    }
+
+    if (cartItems.length === 0) return;
+
+    const invoiceBytes = await buildInvoicePdf({
+      invoiceNumber: `TS-${Date.now()}`,
+      buyerName: currentUser.displayName ?? 'TradeSpace User',
+      buyerEmail: currentUser.email ?? undefined,
+      logoUrl: '/logo.png',
+      brandName: 'TradeSpace',
+      items: cartItems.map((i) => ({
+        title: i.title,
+        quantity: i.quantity,
+        unitPrice: i.price,
+        condition: i.condition,
+        sellerName: i.sellerName,
+        imageUrl: i.imageUrl,
+      })),
+      subtotal,
+      tax,
+      shipping,
+      total,
+      date: new Date(),
+    });
+
+    downloadPdf(invoiceBytes, `TradeSpace-Invoice-${Date.now()}.pdf`);
+
+    setCartItems([]);
   }
-
-  if (cartItems.length === 0) return;
-
-  const invoiceBytes = await buildInvoicePdf({
-    invoiceNumber: `TS-${Date.now()}`,
-    buyerName: currentUser.displayName ?? "TradeSpace User",
-    buyerEmail: currentUser.email ?? undefined,
-    logoUrl: "/logo.png",
-    brandName: "TradeSpace",
-    items: cartItems.map((i) => ({
-      title: i.title,
-      quantity: i.quantity,
-      unitPrice: i.price,
-      condition: i.condition,
-      sellerName: i.sellerName,   
-      imageUrl: i.imageUrl,       
-    })),
-    subtotal,
-    tax,
-    shipping,
-    total,
-    date: new Date(),
-  });
-
-  downloadPdf(invoiceBytes, `TradeSpace-Invoice-${Date.now()}.pdf`);
-
-  setCartItems([]);
-}
-
 
   return (
     <div className="p-6 w-full">
@@ -105,7 +114,8 @@ async function handleCheckout() {
       <div className="mb-6">
         <h2 className="text-2xl mb-2">Shopping Cart</h2>
         <p className="text-muted-foreground">
-          {cartItems.length} {cartItems.length === 1 ? "item" : "items"} in your cart
+          {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} in your
+          cart
         </p>
       </div>
 
@@ -127,7 +137,7 @@ async function handleCheckout() {
                 <div className="flex gap-4">
                   <div className="size-24 rounded-lg bg-muted overflow-hidden shrink-0">
                     <ImageWithFallback
-                      src={item.imageUrl ?? ""}
+                      src={item.imageUrl ?? ''}
                       alt={item.title}
                       className="w-full h-full object-cover"
                     />
@@ -166,7 +176,9 @@ async function handleCheckout() {
                         >
                           <Minus className="size-3" />
                         </Button>
-                        <span className="text-sm w-8 text-center">{item.quantity}</span>
+                        <span className="text-sm w-8 text-center">
+                          {item.quantity}
+                        </span>
                         <Button
                           variant="outline"
                           size="icon"
@@ -176,7 +188,9 @@ async function handleCheckout() {
                           <Plus className="size-3" />
                         </Button>
                       </div>
-                      <p className="text-lg">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="text-lg">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -212,9 +226,13 @@ async function handleCheckout() {
               <span className="text-2xl">${total.toFixed(2)}</span>
             </div>
 
-           <Button className="w-full mb-3" disabled={cartItems.length === 0} onClick={handleCheckout}>
-            Proceed to Checkout
-          </Button>
+            <Button
+              className="w-full mb-3"
+              disabled={cartItems.length === 0}
+              onClick={handleCheckout}
+            >
+              Proceed to Checkout
+            </Button>
             <Button variant="outline" className="w-full gap-2">
               <Tag className="size-4" />
               Apply Coupon
