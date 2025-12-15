@@ -1,7 +1,7 @@
-import { Timestamp, doc, runTransaction } from 'firebase/firestore';
+import { doc, runTransaction } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 
-export async function joinTradespace(tradespaceId: string, uid: string) {
+export async function leaveTradespace(tradespaceId: string, uid: string) {
   const tradespaceRef = doc(db, 'tradespaces', tradespaceId);
   const memberRef = doc(db, 'tradespaces', tradespaceId, 'members', uid);
   const userTradespacesRef = doc(db, 'users', uid, 'tradespaces', tradespaceId);
@@ -12,7 +12,7 @@ export async function joinTradespace(tradespaceId: string, uid: string) {
       tx.get(tradespaceRef),
     ]);
 
-    if (memberSnap.exists()) return;
+    if (!memberSnap.exists()) return;
     if (!tradespaceSnap.exists()) {
       throw new Error('Tradespace does not exist');
     }
@@ -20,21 +20,13 @@ export async function joinTradespace(tradespaceId: string, uid: string) {
     const data = tradespaceSnap.data();
     const currentCount = data.memberCount ?? 0;
 
-    // Tradespace membership doc
-    tx.set(memberRef, {
-      role: 'member',
-      joinedAt: Timestamp.now(),
-    });
+    // Delete membership docs
+    tx.delete(memberRef);
+    tx.delete(userTradespacesRef);
 
-    // include name
-    tx.set(userTradespacesRef, {
-      role: 'member',
-      joinedAt: Timestamp.now(),
-      name: data.name,
-    });
-
+    // Decrement member count but don't go below 0
     tx.update(tradespaceRef, {
-      memberCount: currentCount + 1,
+      memberCount: Math.max(0, currentCount - 1),
     });
   });
 

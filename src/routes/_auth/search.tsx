@@ -39,14 +39,44 @@ function SearchPage() {
     async function load() {
       const tradespacesResponse = await getTradespaces();
       setTradespaces(tradespacesResponse);
-      if (user) {
-        const userTradespacesResponse = await getUserTradespaces(user.uid);
-        setUserTradespaces(userTradespacesResponse);
-      }
       setLoading(false);
     }
+
     load();
   }, []);
+
+  // load user-specific joined tradespaces when auth state changes
+  useEffect(() => {
+    async function loadUserTradespaces() {
+      if (!user) {
+        setUserTradespaces([]);
+        return;
+      }
+
+      const userTradespacesResponse = await getUserTradespaces(user.uid);
+      setUserTradespaces(userTradespacesResponse);
+    }
+
+    loadUserTradespaces();
+  }, [user]);
+
+  useEffect(() => {
+    async function refreshUserTradespaces() {
+      if (!user) return;
+      const userTradespacesResponse = await getUserTradespaces(user.uid);
+      setUserTradespaces(userTradespacesResponse);
+    }
+
+    window.addEventListener(
+      'tradespaces:changed',
+      refreshUserTradespaces as EventListener,
+    );
+    return () =>
+      window.removeEventListener(
+        'tradespaces:changed',
+        refreshUserTradespaces as EventListener,
+      );
+  }, [user]);
 
   const joinedIds = new Set(userTradespaces.map((t) => t.id));
   console.log(joinedIds);
