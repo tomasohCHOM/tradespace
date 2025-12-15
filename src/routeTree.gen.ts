@@ -15,181 +15,136 @@ import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthSearchRouteImport } from './routes/_auth/search'
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
-import { Route as AuthTradespacesTradespaceIdRouteImport } from './routes/_auth/tradespaces/$tradespaceId'
+import { Route as AuthTradespacesRouteRouteImport } from './routes/_auth/tradespaces/route'
+import { Route as AuthTradespacesTradespaceIdRouteRouteImport } from './routes/_auth/tradespaces/$tradespaceId/route'
+import { Route as AuthTradespacesTradespaceIdTopicsRouteImport } from './routes/_auth/tradespaces/$tradespaceId/topics'
+import { Route as AuthTradespacesTradespaceIdProductsRouteImport } from './routes/_auth/tradespaces/$tradespaceId/products'
+import { Route as AuthTradespacesTradespaceIdForumsRouteImport } from './routes/_auth/tradespaces/$tradespaceId/forums'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+
 const AuthSearchRoute = AuthSearchRouteImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+
 const AuthDashboardRoute = AuthDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AuthTradespacesTradespaceIdRoute =
-  AuthTradespacesTradespaceIdRouteImport.update({
-    id: '/tradespaces/$tradespaceId',
-    path: '/tradespaces/$tradespaceId',
-    getParentRoute: () => AuthRouteRoute,
+
+const AuthTradespacesRouteRoute = AuthTradespacesRouteRouteImport.update({
+  id: '/tradespaces',
+  path: '/tradespaces',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
+const AuthTradespacesTradespaceIdRouteRoute =
+  AuthTradespacesTradespaceIdRouteRouteImport.update({
+    id: '/$tradespaceId',
+    path: '/$tradespaceId',
+    getParentRoute: () => AuthTradespacesRouteRoute,
   } as any)
 
-export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
-  '/dashboard': typeof AuthDashboardRoute
-  '/search': typeof AuthSearchRoute
-  '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRoute
+const AuthTradespacesTradespaceIdTopicsRoute =
+  AuthTradespacesTradespaceIdTopicsRouteImport.update({
+    id: '/topics',
+    path: '/topics',
+    getParentRoute: () => AuthTradespacesTradespaceIdRouteRoute,
+  } as any)
+
+const AuthTradespacesTradespaceIdProductsRoute =
+  AuthTradespacesTradespaceIdProductsRouteImport.update({
+    id: '/products',
+    path: '/products',
+    getParentRoute: () => AuthTradespacesTradespaceIdRouteRoute,
+  } as any)
+
+const AuthTradespacesTradespaceIdForumsRoute =
+  AuthTradespacesTradespaceIdForumsRouteImport.update({
+    id: '/forums',
+    path: '/forums',
+    getParentRoute: () => AuthTradespacesTradespaceIdRouteRoute,
+  } as any)
+
+// Children Interfaces
+interface AuthTradespacesTradespaceIdRouteRouteChildren {
+  AuthTradespacesTradespaceIdForumsRoute: typeof AuthTradespacesTradespaceIdForumsRoute
+  AuthTradespacesTradespaceIdProductsRoute: typeof AuthTradespacesTradespaceIdProductsRoute
+  AuthTradespacesTradespaceIdTopicsRoute: typeof AuthTradespacesTradespaceIdTopicsRoute
 }
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
-  '/dashboard': typeof AuthDashboardRoute
-  '/search': typeof AuthSearchRoute
-  '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRoute
+
+const AuthTradespacesTradespaceIdRouteRouteChildren: AuthTradespacesTradespaceIdRouteRouteChildren = {
+  AuthTradespacesTradespaceIdForumsRoute,
+  AuthTradespacesTradespaceIdProductsRoute,
+  AuthTradespacesTradespaceIdTopicsRoute,
 }
-export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_auth': typeof AuthRouteRouteWithChildren
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
-  '/_auth/dashboard': typeof AuthDashboardRoute
-  '/_auth/search': typeof AuthSearchRoute
-  '/_auth/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRoute
+
+const AuthTradespacesTradespaceIdRouteRouteWithChildren =
+  AuthTradespacesTradespaceIdRouteRoute._addFileChildren(AuthTradespacesTradespaceIdRouteRouteChildren)
+
+interface AuthTradespacesRouteRouteChildren {
+  AuthTradespacesTradespaceIdRouteRoute: typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
 }
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/login'
-    | '/signup'
-    | '/dashboard'
-    | '/search'
-    | '/tradespaces/$tradespaceId'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/login'
-    | '/signup'
-    | '/dashboard'
-    | '/search'
-    | '/tradespaces/$tradespaceId'
-  id:
-    | '__root__'
-    | '/'
-    | '/_auth'
-    | '/login'
-    | '/signup'
-    | '/_auth/dashboard'
-    | '/_auth/search'
-    | '/_auth/tradespaces/$tradespaceId'
-  fileRoutesById: FileRoutesById
+
+const AuthTradespacesRouteRouteChildren: AuthTradespacesRouteRouteChildren = {
+  AuthTradespacesTradespaceIdRouteRoute: AuthTradespacesTradespaceIdRouteRouteWithChildren,
 }
-export interface RootRouteChildren {
+
+const AuthTradespacesRouteRouteWithChildren =
+  AuthTradespacesRouteRoute._addFileChildren(AuthTradespacesRouteRouteChildren)
+
+interface AuthRouteRouteChildren {
+  AuthTradespacesRouteRoute: typeof AuthTradespacesRouteRouteWithChildren
+  AuthDashboardRoute: typeof AuthDashboardRoute
+  AuthSearchRoute: typeof AuthSearchRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthTradespacesRouteRoute: AuthTradespacesRouteRouteWithChildren,
+  AuthDashboardRoute,
+  AuthSearchRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(AuthRouteRouteChildren)
+
+interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
 }
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth/search': {
-      id: '/_auth/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof AuthSearchRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_auth/dashboard': {
-      id: '/_auth/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthDashboardRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_auth/tradespaces/$tradespaceId': {
-      id: '/_auth/tradespaces/$tradespaceId'
-      path: '/tradespaces/$tradespaceId'
-      fullPath: '/tradespaces/$tradespaceId'
-      preLoaderRoute: typeof AuthTradespacesTradespaceIdRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-  }
-}
-
-interface AuthRouteRouteChildren {
-  AuthDashboardRoute: typeof AuthDashboardRoute
-  AuthSearchRoute: typeof AuthSearchRoute
-  AuthTradespacesTradespaceIdRoute: typeof AuthTradespacesTradespaceIdRoute
-}
-
-const AuthRouteRouteChildren: AuthRouteRouteChildren = {
-  AuthDashboardRoute: AuthDashboardRoute,
-  AuthSearchRoute: AuthSearchRoute,
-  AuthTradespacesTradespaceIdRoute: AuthTradespacesTradespaceIdRoute,
-}
-
-const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
-  AuthRouteRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  LoginRoute: LoginRoute,
-  SignupRoute: SignupRoute,
+  LoginRoute,
+  SignupRoute,
 }
+
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes()

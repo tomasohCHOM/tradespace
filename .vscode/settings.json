@@ -4,8 +4,5 @@
   },
   "search.exclude": {
     "**/routeTree.gen.ts": true
-  },
-  "files.readonlyInclude": {
-    "**/routeTree.gen.ts": true
   }
 }
