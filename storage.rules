@@ -7,14 +7,20 @@ service firebase.storage {
       return request.auth != null;
     }
 
-    // Match to userId folders
-    match /{folder}/{userId}/{allPaths=**} {
-
-      // Read user only
+    // Listing images inside tradespaces
+    // Path: tradespaces/{tradespaceId}/listings/{userId}/...
+    match /tradespaces/{tradespaceId}/listings/{userId}/{allPaths=**} {
       allow read: if isSignedIn();
 
-      // Write (create, update, delete) user only
-      // Images for Listings
+      allow write: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.size < 10 * 1024 * 1024 // limit 10MB
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    match /{folder}/{userId}/{allPaths=**} {
+      allow read: if isSignedIn();
+
       allow write: if isSignedIn()
         && request.auth.uid == userId
         && request.resource.size < 10 * 1024 * 1024 // limit 10MB
