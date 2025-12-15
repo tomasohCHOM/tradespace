@@ -27,7 +27,18 @@ function WorkspaceLayout() {
   useEffect(() => {
     if (!user) return;
 
-    getUserTradespaces(user.uid).then(setTradespaces);
+    const uid = user.uid;
+    getUserTradespaces(uid).then(setTradespaces);
+  }, [user]);
+
+  useEffect(() => {
+    function handleRefresh() {
+      if (!user) return;
+      getUserTradespaces(user.uid).then(setTradespaces);
+    }
+
+    window.addEventListener('tradespaces:changed', handleRefresh as EventListener);
+    return () => window.removeEventListener('tradespaces:changed', handleRefresh as EventListener);
   }, [user]);
 
   if (loading) {

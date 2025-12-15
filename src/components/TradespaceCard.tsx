@@ -4,9 +4,19 @@ import FallBackImage from '../../src/images/brokenimage.jpg';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from './ui/dialog';
 import type { Tradespace } from '@/types/tradespace';
 import { useAuth } from '@/context/AuthContext';
 import { joinTradespace } from '@/api/joinTradespace';
+import { leaveTradespace } from '@/api/leaveTradespace';
 
 export function TradespaceCard({
   tradespace,
@@ -17,15 +27,33 @@ export function TradespaceCard({
 }) {
   const { user } = useAuth();
   const [joining, setJoining] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const [hasJoined, setJoined] = useState(joined);
 
   const handleJoinTradespace = async () => {
     if (!user) return;
     setJoining(true);
-    await joinTradespace(tradespace.id, user.uid);
+    const uid = user.uid;
+    await joinTradespace(tradespace.id, uid);
     setJoined(true);
     setJoining(false);
   };
+
+  const handleLeaveTradespace = async () => {
+    if (!user) return;
+    setLeaving(true);
+    try {
+      const uid = user.uid;
+      await leaveTradespace(tradespace.id, uid);
+      setJoined(false);
+    } catch (err) {
+      console.error('Failed to leave tradespace', err);
+    } finally {
+      setLeaving(false);
+    }
+  };
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
@@ -83,20 +111,54 @@ export function TradespaceCard({
           </div>
         </div>
 
-        <Button
-          disabled={joining || hasJoined}
-          onClick={handleJoinTradespace}
-          className="w-full gap-2"
-        >
-          {hasJoined ? (
-            'Joined'
-          ) : (
-            <>
-              <Plus className="size-4" />
-              Join Tradespace
-            </>
-          )}
-        </Button>
+        {!hasJoined ? (
+          <Button disabled={joining} onClick={handleJoinTradespace} className="w-full gap-2">
+            <Plus className="size-4" />
+            Join Tradespace
+          </Button>
+        ) : (
+          <div className="flex gap-2">
+            <Button
+              variant="destructive"
+              onClick={() => setConfirmOpen(true)}
+              disabled={leaving}
+              className="flex-1"
+            >
+              Leave
+            </Button>
+
+            <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Leave Tradespace</DialogTitle>
+                  <DialogDescription>
+                    Are you sure you want to leave <strong>{tradespace.name}</strong>? You can rejoin at any time.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={async () => {
+                      await handleLeaveTradespace();
+                      setConfirmOpen(false);
+                    }}
+                    disabled={leaving}
+                  >
+                    Leave
+                  </Button>
+                </DialogFooter>
+                <DialogClose />
+              </DialogContent>
+            </Dialog>
+
+            <Button disabled className="flex-1">
+              Joined
+            </Button>
+          </div>
+        )}
       </div>
     </Card>
   );
