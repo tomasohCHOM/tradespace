@@ -2,33 +2,66 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Allow read/write to nothing by default
     function isSignedIn() {
       return request.auth != null;
     }
 
-    // user, subject to change or add
-    // read write
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Member check (members subcollection)
+    function isTradespaceMember(tradespaceId) {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/tradespaces/$(tradespaceId)/members/$(request.auth.uid));
+    }
+
+    // users doc
     match /users/{userId} {
-      allow read, update, delete: if isSignedIn() && request.auth.uid == userId;
+      allow read, update, delete: if isOwner(userId);
       allow create: if isSignedIn();
     }
 
-    // Listings
-    // only auth user can update/delete; signed in users can read/ view
-    match /listings/{listingId} {
+    // cart subcollection
+    match /users/{userId}/cartItems/{cartItemId} {
+      allow read, create, update, delete: if isOwner(userId);
+    }
+
+    // tradespaces doc (optional but usually needed)
+    match /tradespaces/{tradespaceId} {
       allow read: if isSignedIn();
-
       allow create: if isSignedIn();
-
-      allow update, delete: if isSignedIn()
-        && request.auth.uid == resource.data.ownerId;
+      // allow update/delete only if you add an owner field later; otherwise keep locked down
+      allow update, delete: if false;
     }
 
-    //Reminder for rules for
-    //Communities, Tradspaces, Forums, other user data, Comments, etc
+    // members subcollection (needed for isTradespaceMember to work reliably)
+    match /tradespaces/{tradespaceId}/members/{memberId} {
+      // members can see member list (or change to false if you want private)
+      allow read: if isTradespaceMember(tradespaceId);
 
-    // default
+      // user can create their own membership doc (join flow)
+      allow create: if isOwner(memberId);
+
+      // lock down edits/deletes (or expand for admins later)
+      allow update, delete: if false;
+    }
+
+    // listings subcollection (THIS matches your screenshot fields)
+    match /tradespaces/{tradespaceId}/listings/{listingId} {
+      // only members can view listings
+      allow read: if isTradespaceMember(tradespaceId);
+
+      // only members can create listings
+      allow create: if isTradespaceMember(tradespaceId)
+        && request.resource.data.sellerId == request.auth.uid;
+
+      // only seller can edit/delete their listing
+      allow update, delete: if isTradespaceMember(tradespaceId)
+        && resource.data.sellerId == request.auth.uid;
+    }
+
+    // default deny
     match /{document=**} {
       allow read, write: if false;
     }

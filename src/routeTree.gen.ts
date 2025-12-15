@@ -15,6 +15,7 @@ import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthSearchRouteImport } from './routes/_auth/search'
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
+import { Route as AuthCartRouteImport } from './routes/_auth/cart'
 import { Route as AuthTradespacesRouteRouteImport } from './routes/_auth/tradespaces/route'
 import { Route as AuthTradespacesTradespaceIdRouteRouteImport } from './routes/_auth/tradespaces/$tradespaceId/route'
 import { Route as AuthTradespacesTradespaceIdTopicsRouteImport } from './routes/_auth/tradespaces/$tradespaceId/topics'
@@ -48,6 +49,11 @@ const AuthSearchRoute = AuthSearchRouteImport.update({
 const AuthDashboardRoute = AuthDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthCartRoute = AuthCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthTradespacesRouteRoute = AuthTradespacesRouteRouteImport.update({
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/tradespaces': typeof AuthTradespacesRouteRouteWithChildren
+  '/cart': typeof AuthCartRoute
   '/dashboard': typeof AuthDashboardRoute
   '/search': typeof AuthSearchRoute
   '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/tradespaces': typeof AuthTradespacesRouteRouteWithChildren
+  '/cart': typeof AuthCartRoute
   '/dashboard': typeof AuthDashboardRoute
   '/search': typeof AuthSearchRoute
   '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_auth/tradespaces': typeof AuthTradespacesRouteRouteWithChildren
+  '/_auth/cart': typeof AuthCartRoute
   '/_auth/dashboard': typeof AuthDashboardRoute
   '/_auth/search': typeof AuthSearchRoute
   '/_auth/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/tradespaces'
+    | '/cart'
     | '/dashboard'
     | '/search'
     | '/tradespaces/$tradespaceId'
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/tradespaces'
+    | '/cart'
     | '/dashboard'
     | '/search'
     | '/tradespaces/$tradespaceId'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_auth/tradespaces'
+    | '/_auth/cart'
     | '/_auth/dashboard'
     | '/_auth/search'
     | '/_auth/tradespaces/$tradespaceId'
@@ -207,6 +219,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthDashboardRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/cart': {
+      id: '/_auth/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof AuthCartRouteImport
       parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tradespaces': {
@@ -282,12 +301,14 @@ const AuthTradespacesRouteRouteWithChildren =
 
 interface AuthRouteRouteChildren {
   AuthTradespacesRouteRoute: typeof AuthTradespacesRouteRouteWithChildren
+  AuthCartRoute: typeof AuthCartRoute
   AuthDashboardRoute: typeof AuthDashboardRoute
   AuthSearchRoute: typeof AuthSearchRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthTradespacesRouteRoute: AuthTradespacesRouteRouteWithChildren,
+  AuthCartRoute: AuthCartRoute,
   AuthDashboardRoute: AuthDashboardRoute,
   AuthSearchRoute: AuthSearchRoute,
 }
