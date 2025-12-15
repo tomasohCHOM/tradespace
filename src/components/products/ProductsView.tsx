@@ -1,14 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Clock, 
-  DollarSign, 
-  Filter, 
-  Plus, 
-  TrendingUp, 
-  Calendar, 
-  MessageCircle, 
-  Edit, 
-  Trash2, 
-  ShoppingCart } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  DollarSign,
+  Edit,
+  Filter,
+  MessageCircle,
+  Plus,
+  ShoppingCart,
+  Trash2,
+  TrendingUp,
+} from 'lucide-react';
 import {
   collection,
   limit,
@@ -21,9 +23,9 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from '@/components/ui/dialog';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -114,7 +116,7 @@ export default function ProductsView({
   const [editTitle, setEditTitle] = useState('');
   const [editPrice, setEditPrice] = useState<string>('');
   const [editDescription, setEditDescription] = useState('');
-  
+
   const { user } = useAuth();
 
   // firestore feed
@@ -159,10 +161,18 @@ export default function ProductsView({
               typeof data.sellerName === 'string' && data.sellerName.length
                 ? data.sellerName
                 : 'Unknown',
-            sellerId: typeof data.sellerId === 'string' ? data.sellerId : undefined,
+            sellerId:
+              typeof data.sellerId === 'string' ? data.sellerId : undefined,
             imageUrl: firstImage(data.imageUrls),
-            imageUrls: Array.isArray(data.imageUrls) ? data.imageUrls : typeof data.imageUrls === 'string' ? [data.imageUrls] : [],
-            description: typeof data.description === 'string' ? data.description : undefined,
+            imageUrls: Array.isArray(data.imageUrls)
+              ? data.imageUrls
+              : typeof data.imageUrls === 'string'
+                ? [data.imageUrls]
+                : [],
+            description:
+              typeof data.description === 'string'
+                ? data.description
+                : undefined,
             postedAt: timeAgo(createdAtMs),
             tags: Array.isArray(data.tags) ? data.tags : [],
             offers: typeof data.offers === 'number' ? data.offers : undefined,
@@ -355,7 +365,14 @@ export default function ProductsView({
                   <Button
                     size="sm"
                     onClick={() => {
-                      console.debug('Opening details for', product.id, 'sellerId:', product.sellerId, 'currentUser:', user?.uid);
+                      console.debug(
+                        'Opening details for',
+                        product.id,
+                        'sellerId:',
+                        product.sellerId,
+                        'currentUser:',
+                        user?.uid,
+                      );
                       setSelected(product);
                       setEditTitle(product.title);
                       setEditPrice(String(product.price));
@@ -401,7 +418,14 @@ export default function ProductsView({
 
           {/* Product Image */}
           <div className="aspect-video bg-muted rounded-lg overflow-hidden">
-            <ImageWithFallback src={(selected?.imageUrls && selected.imageUrls[0]) || selected?.imageUrl} alt={selected?.title || ''} className="w-full h-full object-cover" />
+            <ImageWithFallback
+              src={
+                (selected?.imageUrls && selected.imageUrls[0]) ||
+                selected?.imageUrl
+              }
+              alt={selected?.title || ''}
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {/* Price and Condition */}
@@ -409,18 +433,28 @@ export default function ProductsView({
             <div>
               {!isEditing ? (
                 <>
-                  <p className="text-3xl text-primary mb-1">${selected?.price}</p>
-                  {selected?.condition && <Badge variant="secondary">{selected.condition}</Badge>}
+                  <p className="text-3xl text-primary mb-1">
+                    ${selected?.price}
+                  </p>
+                  {selected?.condition && (
+                    <Badge variant="secondary">{selected.condition}</Badge>
+                  )}
                 </>
               ) : (
                 <div className="flex items-center gap-2">
-                  <input className="rounded-md border px-3 py-2 w-32" value={editPrice} onChange={(e) => setEditPrice(e.target.value)} />
+                  <input
+                    className="rounded-md border px-3 py-2 w-32"
+                    value={editPrice}
+                    onChange={(e) => setEditPrice(e.target.value)}
+                  />
                   <Badge variant="secondary">{selected?.condition}</Badge>
                 </div>
               )}
             </div>
             {selected?.offers && (
-              <Badge className="bg-orange-500">{selected.offers} Active Offers</Badge>
+              <Badge className="bg-orange-500">
+                {selected.offers} Active Offers
+              </Badge>
             )}
           </div>
 
@@ -432,15 +466,22 @@ export default function ProductsView({
             {!isEditing ? (
               <p className="text-muted-foreground">{selected?.description}</p>
             ) : (
-              <textarea className="w-full rounded-md border px-3 py-2" value={editDescription} onChange={(e) => setEditDescription(e.target.value)} />
+              <textarea
+                className="w-full rounded-md border px-3 py-2"
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+              />
             )}
           </div>
 
           {/* Tags */}
           <div className="flex items-center gap-2 flex-wrap">
-            {selected?.tags?.map((tag) => (
-              <Badge key={tag} variant="outline">{tag}</Badge>
-            ))}
+            {selected &&
+              selected.tags.map((tag) => (
+                <Badge key={tag} variant="outline">
+                  {tag}
+                </Badge>
+              ))}
           </div>
 
           <Separator />
@@ -461,7 +502,7 @@ export default function ProductsView({
           {/* Seller Info */}
           <div className="flex items-center gap-3">
             <Avatar className="size-12">
-              <AvatarFallback>{selected?.seller?.[0] ?? '?'}</AvatarFallback>
+              <AvatarFallback>{selected!.seller[0] || '?'}</AvatarFallback>
             </Avatar>
             <div>
               <p className="text-xs text-muted-foreground">Seller</p>
@@ -477,52 +518,102 @@ export default function ProductsView({
               <>
                 {!isEditing ? (
                   <>
-                    <Button className="flex-1 gap-2" onClick={() => setIsEditing(true)}>
+                    <Button
+                      className="flex-1 gap-2"
+                      onClick={() => setIsEditing(true)}
+                    >
                       <Edit className="size-4" />
                       Edit Listing
                     </Button>
-                    <Button variant="destructive" className="flex-1 gap-2" onClick={async () => {
-                      const ok = confirm('Delete this listing? This cannot be undone.');
-                      if (!ok) return;
-                      try {
-                        const { deleteDoc, doc } = await import('firebase/firestore');
-                        await deleteDoc(doc(db, 'tradespaces', tradespaceId, 'listings', selected?.id));
-                        setProducts((prev) => prev.filter((p) => p.id !== selected?.id));
-                        setIsDetailsOpen(false);
-                      } catch (err) {
-                        console.error('Delete failed', err);
-                        alert('Failed to delete listing');
-                      }
-                    }}>
+                    <Button
+                      variant="destructive"
+                      className="flex-1 gap-2"
+                      onClick={async () => {
+                        const ok = confirm(
+                          'Delete this listing? This cannot be undone.',
+                        );
+                        if (!ok) return;
+                        try {
+                          const { deleteDoc, doc } = await import(
+                            'firebase/firestore'
+                          );
+                          await deleteDoc(
+                            doc(
+                              db,
+                              'tradespaces',
+                              tradespaceId,
+                              'listings',
+                              selected.id,
+                            ),
+                          );
+                          setProducts((prev) =>
+                            prev.filter((p) => p.id !== selected.id),
+                          );
+                          setIsDetailsOpen(false);
+                        } catch (err) {
+                          console.error('Delete failed', err);
+                          alert('Failed to delete listing');
+                        }
+                      }}
+                    >
                       <Trash2 className="size-4" />
                       Delete Listing
                     </Button>
                   </>
                 ) : (
                   <>
-                    <Button className="flex-1 gap-2" onClick={async () => {
-                      try {
-                        const { updateDoc, doc } = await import('firebase/firestore');
-                        await updateDoc(doc(db, 'tradespaces', tradespaceId, 'listings', selected?.id), {
-                          title: editTitle,
-                          price: Number(editPrice) || 0,
-                          description: editDescription,
-                        });
-                        setProducts((prev) => prev.map((p) => p.id === selected?.id ? { ...p, title: editTitle, price: Number(editPrice) || 0, description: editDescription } : p));
-                        setIsEditing(false);
-                      } catch (err) {
-                        console.error('Failed to save listing edits', err);
-                        alert('Failed to save edits');
-                      }
-                    }}>
+                    <Button
+                      className="flex-1 gap-2"
+                      onClick={async () => {
+                        try {
+                          const { updateDoc, doc } = await import(
+                            'firebase/firestore'
+                          );
+                          await updateDoc(
+                            doc(
+                              db,
+                              'tradespaces',
+                              tradespaceId,
+                              'listings',
+                              selected.id,
+                            ),
+                            {
+                              title: editTitle,
+                              price: Number(editPrice) || 0,
+                              description: editDescription,
+                            },
+                          );
+                          setProducts((prev) =>
+                            prev.map((p) =>
+                              p.id === selected.id
+                                ? {
+                                    ...p,
+                                    title: editTitle,
+                                    price: Number(editPrice) || 0,
+                                    description: editDescription,
+                                  }
+                                : p,
+                            ),
+                          );
+                          setIsEditing(false);
+                        } catch (err) {
+                          console.error('Failed to save listing edits', err);
+                          alert('Failed to save edits');
+                        }
+                      }}
+                    >
                       Save
                     </Button>
-                    <Button variant="outline" className="flex-1 gap-2" onClick={() => {
-                      setIsEditing(false);
-                      setEditTitle(selected?.title ?? '');
-                      setEditPrice(String(selected?.price ?? ''));
-                      setEditDescription(selected?.description ?? '');
-                    }}>
+                    <Button
+                      variant="outline"
+                      className="flex-1 gap-2"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setEditTitle(selected.title);
+                        setEditPrice(String(selected.price));
+                        setEditDescription(selected.description ?? '');
+                      }}
+                    >
                       Cancel
                     </Button>
                   </>
@@ -530,11 +621,18 @@ export default function ProductsView({
               </>
             ) : (
               <>
-                <Button className="flex-1 gap-2" onClick={() => alert('Buy clicked')}>
+                <Button
+                  className="flex-1 gap-2"
+                  onClick={() => alert('Buy clicked')}
+                >
                   <ShoppingCart className="size-4" />
                   Buy Now
                 </Button>
-                <Button variant="outline" className="flex-1 gap-2" onClick={() => alert('Make offer')}>
+                <Button
+                  variant="outline"
+                  className="flex-1 gap-2"
+                  onClick={() => alert('Make offer')}
+                >
                   <MessageCircle className="size-4" />
                   Make Offer
                 </Button>
@@ -543,7 +641,9 @@ export default function ProductsView({
           </div>
 
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setIsDetailsOpen(false)}>Close</Button>
+            <Button variant="ghost" onClick={() => setIsDetailsOpen(false)}>
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

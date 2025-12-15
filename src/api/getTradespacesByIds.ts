@@ -1,8 +1,10 @@
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/firebase/config';
 import type { Tradespace } from '@/types/tradespace';
+import { db } from '@/firebase/config';
 
-export async function getTradespacesByIds(ids: string[]): Promise<Array<Tradespace>> {
+export async function getTradespacesByIds(
+  ids: Array<string>,
+): Promise<Array<Tradespace>> {
   const results: Array<Tradespace> = [];
 
   await Promise.all(

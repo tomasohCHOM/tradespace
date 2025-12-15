@@ -67,8 +67,15 @@ function SearchPage() {
       setUserTradespaces(userTradespacesResponse);
     }
 
-    window.addEventListener('tradespaces:changed', refreshUserTradespaces as EventListener);
-    return () => window.removeEventListener('tradespaces:changed', refreshUserTradespaces as EventListener);
+    window.addEventListener(
+      'tradespaces:changed',
+      refreshUserTradespaces as EventListener,
+    );
+    return () =>
+      window.removeEventListener(
+        'tradespaces:changed',
+        refreshUserTradespaces as EventListener,
+      );
   }, [user]);
 
   const joinedIds = new Set(userTradespaces.map((t) => t.id));

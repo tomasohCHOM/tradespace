@@ -37,8 +37,15 @@ function WorkspaceLayout() {
       getUserTradespaces(user.uid).then(setTradespaces);
     }
 
-    window.addEventListener('tradespaces:changed', handleRefresh as EventListener);
-    return () => window.removeEventListener('tradespaces:changed', handleRefresh as EventListener);
+    window.addEventListener(
+      'tradespaces:changed',
+      handleRefresh as EventListener,
+    );
+    return () =>
+      window.removeEventListener(
+        'tradespaces:changed',
+        handleRefresh as EventListener,
+      );
   }, [user]);
 
   if (loading) {

@@ -1,28 +1,28 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+
+import {
+  Activity,
+  ArrowUpRight,
+  BarChart3,
+  DollarSign,
+  MessageSquare,
+  Package,
+  ShoppingCart,
+  Star,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
+import type { Tradespace } from '@/types/tradespace';
 import { useAuth } from '@/context/AuthContext';
 import { getUserTradespaces } from '@/api/getUserTradespaces';
 import { getTradespacesByIds } from '@/api/getTradespacesByIds';
-import type { Tradespace } from '@/types/tradespace';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ImageWithFallback } from '@/components/ImageWithFallback';
-import {
-  TrendingUp,
-  ShoppingCart,
-  MessageSquare,
-  Users,
-  ArrowUpRight,
-  DollarSign,
-  Package,
-  Activity,
-  Star,
-  BarChart3,
-} from 'lucide-react';
 
 export const Route = createFileRoute('/_auth/dashboard')({
   component: Dashboard,
@@ -59,12 +59,12 @@ interface ActiveTrade {
   amount: number;
 }
 
-const mockRecentActivity: RecentActivity[] = [
+const mockRecentActivity: Array<RecentActivity> = [
   {
     id: '1',
     type: 'offer',
     title: 'New offer on your Mechanical Keyboard',
-    description: "TechBuyer offered $85 for your item",
+    description: 'TechBuyer offered $85 for your item',
     timestamp: '5 minutes ago',
     tradespace: 'Tech & Gadgets',
     user: 'TechBuyer',
@@ -73,8 +73,9 @@ const mockRecentActivity: RecentActivity[] = [
   {
     id: '2',
     type: 'post',
-    title: "VintageCollector replied to your forum post",
-    description: "Great insights! I've been using similar pricing strategies...",
+    title: 'VintageCollector replied to your forum post',
+    description:
+      "Great insights! I've been using similar pricing strategies...",
     timestamp: '1 hour ago',
     tradespace: 'Fashion & Streetwear',
     user: 'VintageCollector',
@@ -108,13 +109,12 @@ const mockRecentActivity: RecentActivity[] = [
   },
 ];
 
-const mockTrendingProducts: TrendingProduct[] = [
+const mockTrendingProducts: Array<TrendingProduct> = [
   {
     id: '1',
     title: 'Limited Edition Sneakers - Size 10',
     price: 299.99,
-    imageUrl:
-      'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400',
     tradespace: 'Fashion & Streetwear',
     offers: 12,
     views: 834,
@@ -143,15 +143,14 @@ const mockTrendingProducts: TrendingProduct[] = [
     id: '4',
     title: 'Designer Leather Jacket',
     price: 449.99,
-    imageUrl:
-      'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400',
     tradespace: 'Fashion & Streetwear',
     offers: 6,
     views: 492,
   },
 ];
 
-const mockActiveTrades: ActiveTrade[] = [
+const mockActiveTrades: Array<ActiveTrade> = [
   {
     id: '1',
     product: 'Mechanical Gaming Keyboard',
@@ -249,8 +248,15 @@ export default function Dashboard() {
       load();
     }
 
-    window.addEventListener('tradespaces:changed', handleRefresh as EventListener);
-    return () => window.removeEventListener('tradespaces:changed', handleRefresh as EventListener);
+    window.addEventListener(
+      'tradespaces:changed',
+      handleRefresh as EventListener,
+    );
+    return () =>
+      window.removeEventListener(
+        'tradespaces:changed',
+        handleRefresh as EventListener,
+      );
   }, [user]);
 
   return (
@@ -268,20 +274,37 @@ export default function Dashboard() {
 
         <Card className="p-4">
           {joined.length === 0 ? (
-            <p className="text-sm text-muted-foreground">You haven't joined any tradespaces yet.</p>
+            <p className="text-sm text-muted-foreground">
+              You haven't joined any tradespaces yet.
+            </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {joined.map((ts) => (
-                <div key={ts.id} className="flex items-center gap-3 p-2 border rounded-md">
+                <div
+                  key={ts.id}
+                  className="flex items-center gap-3 p-2 border rounded-md"
+                >
                   <div className="size-12 rounded-md overflow-hidden bg-muted flex-shrink-0">
-                    <ImageWithFallback src={ts.thumbnailUrl} alt={ts.name} className="w-full h-full object-cover" />
+                    <ImageWithFallback
+                      src={ts.thumbnailUrl}
+                      alt={ts.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold line-clamp-1">{ts.name}</p>
-                    <p className="text-xs text-muted-foreground">{ts.memberCount ?? 0} members</p>
+                    <p className="text-xs text-muted-foreground">
+                      {ts.memberCount ?? 0} members
+                    </p>
                   </div>
                   <div>
-                    <Button onClick={() => navigate({ to: `/tradespaces/${ts.id}/products` })} size="sm" className="whitespace-nowrap">
+                    <Button
+                      onClick={() =>
+                        navigate({ to: `/tradespaces/${ts.id}/products` })
+                      }
+                      size="sm"
+                      className="whitespace-nowrap"
+                    >
                       View Products
                     </Button>
                   </div>
@@ -363,7 +386,7 @@ export default function Dashboard() {
                 >
                   <div
                     className={`size-8 rounded-lg flex items-center justify-center flex-shrink-0 ${getActivityColor(
-                      activity.type
+                      activity.type,
                     )}`}
                   >
                     {getActivityIcon(activity.type)}
@@ -449,18 +472,26 @@ export default function Dashboard() {
                 >
                   <div className="flex items-start gap-3 mb-2">
                     <Avatar className="size-8">
-                      <AvatarFallback className="text-xs">{trade.userInitials}</AvatarFallback>
+                      <AvatarFallback className="text-xs">
+                        {trade.userInitials}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm line-clamp-1 mb-1">{trade.product}</p>
-                      <p className="text-xs text-muted-foreground">{trade.otherUser}</p>
+                      <p className="text-sm line-clamp-1 mb-1">
+                        {trade.product}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {trade.otherUser}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-sm">${trade.amount}</p>
                     {getStatusBadge(trade.status)}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">{trade.timestamp}</p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {trade.timestamp}
+                  </p>
                 </div>
               ))}
             </div>
@@ -501,7 +532,9 @@ export default function Dashboard() {
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Product Views</span>
+                  <span className="text-sm text-muted-foreground">
+                    Product Views
+                  </span>
                   <span className="text-sm">2,341</span>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
@@ -511,7 +544,9 @@ export default function Dashboard() {
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Offers Received</span>
+                  <span className="text-sm text-muted-foreground">
+                    Offers Received
+                  </span>
                   <span className="text-sm">18</span>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
@@ -521,7 +556,9 @@ export default function Dashboard() {
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Forum Engagement</span>
+                  <span className="text-sm text-muted-foreground">
+                    Forum Engagement
+                  </span>
                   <span className="text-sm">124</span>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">

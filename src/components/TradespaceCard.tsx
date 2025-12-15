@@ -6,12 +6,12 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
   DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from './ui/dialog';
 import type { Tradespace } from '@/types/tradespace';
 import { useAuth } from '@/context/AuthContext';
@@ -112,7 +112,11 @@ export function TradespaceCard({
         </div>
 
         {!hasJoined ? (
-          <Button disabled={joining} onClick={handleJoinTradespace} className="w-full gap-2">
+          <Button
+            disabled={joining}
+            onClick={handleJoinTradespace}
+            className="w-full gap-2"
+          >
             <Plus className="size-4" />
             Join Tradespace
           </Button>
@@ -132,11 +136,16 @@ export function TradespaceCard({
                 <DialogHeader>
                   <DialogTitle>Leave Tradespace</DialogTitle>
                   <DialogDescription>
-                    Are you sure you want to leave <strong>{tradespace.name}</strong>? You can rejoin at any time.
+                    Are you sure you want to leave{' '}
+                    <strong>{tradespace.name}</strong>? You can rejoin at any
+                    time.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setConfirmOpen(false)}
+                  >
                     Cancel
                   </Button>
                   <Button
