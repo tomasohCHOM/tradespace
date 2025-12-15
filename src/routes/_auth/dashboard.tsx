@@ -1,10 +1,10 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
+import type { Tradespace } from '@/types/tradespace';
 import { useAuth } from '@/context/AuthContext';
 import { getUserTradespaces } from '@/api/getUserTradespaces';
 import { getTradespaces } from '@/api/getTradespaces';
 import { TradespaceCard } from '@/components/TradespaceCard';
-import type { Tradespace } from '@/types/tradespace';
 
 export const Route = createFileRoute('/_auth/dashboard')({
   component: DashboardPage,
@@ -12,8 +12,8 @@ export const Route = createFileRoute('/_auth/dashboard')({
 
 function DashboardPage() {
   const { user } = useAuth();
-  const [userTradespaces, setUserTradespaces] = useState<Tradespace[]>([]);
-  const [allTradespaces, setAllTradespaces] = useState<Tradespace[]>([]);
+  const [userTradespaces, setUserTradespaces] = useState<Array<Tradespace>>([]);
+  const [allTradespaces, setAllTradespaces] = useState<Array<Tradespace>>([]);
   const navigate = useNavigate();
 
   const loadTradespaces = async () => {

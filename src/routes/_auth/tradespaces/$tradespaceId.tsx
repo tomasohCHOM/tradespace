@@ -1,11 +1,11 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { getDoc, collection, getDocs, doc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import type { Tradespace } from '@/types/tradespace';
 import { db } from '@/firebase/config';
 import { useAuth } from '@/context/AuthContext';
 import { getUserTradespaces } from '@/api/getUserTradespaces';
 import { joinTradespace, leaveTradespace } from '@/lib/firestore';
-import type { Tradespace } from '@/types/tradespace';
 
 export const Route = createFileRoute('/_auth/tradespaces/$tradespaceId')({
   component: TradespaceDetailPage,
@@ -16,7 +16,7 @@ export function TradespaceDetailPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [tradespace, setTradespace] = useState<Tradespace | null>(null);
-  const [listings, setListings] = useState<any[]>([]);
+  const [listings, setListings] = useState<Array<any>>([]);
   const [loading, setLoading] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
 

@@ -1,11 +1,11 @@
 import {
+  arrayRemove,
+  arrayUnion,
   doc,
   getDoc,
+  increment,
   setDoc,
   updateDoc,
-  arrayUnion,
-  arrayRemove,
-  increment,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 

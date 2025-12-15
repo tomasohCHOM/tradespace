@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { db } from '../../src/firebase/config';
 import type { Tradespace } from '@/types/tradespace';
 
