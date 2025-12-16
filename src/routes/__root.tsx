@@ -15,7 +15,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
       {/* Virtual Assistant q */}
       <VirtualAssistant />
-    
+
       {/* TanStack Devtools - bottom-right corner */}
       <TanStackDevtools
         config={{

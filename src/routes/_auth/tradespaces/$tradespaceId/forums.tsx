@@ -23,8 +23,7 @@ type SortOption = 'recent' | 'popular' | 'trending' | 'unanswered';
 
 export default function ForumsView() {
   const { tradespaceId } = Route.useParams();
-  const [categoryFilter, setCategoryFilter] =
-    useState<CategoryFilter>('all');
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
   const [sortOption, setSortOption] = useState<SortOption>('recent');
   const [showNewPostModal, setShowNewPostModal] = useState(false);
 
@@ -51,60 +50,60 @@ export default function ForumsView() {
           </Button>
         </div>
 
-      <Tabs
-        value={categoryFilter}
-        onValueChange={(value) => setCategoryFilter(value as CategoryFilter)}
-      >
-        <TabsList>
-          <TabsTrigger value="all">All Posts</TabsTrigger>
-          <TabsTrigger value="discussion">Discussions</TabsTrigger>
-          <TabsTrigger value="question">Questions</TabsTrigger>
-          <TabsTrigger value="story">Stories</TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      <div className="flex items-center gap-4">
-        <Select
-          value={sortOption}
-          onValueChange={(value) => setSortOption(value as SortOption)}
+        <Tabs
+          value={categoryFilter}
+          onValueChange={(value) => setCategoryFilter(value as CategoryFilter)}
         >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Sort by" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="recent">Most Recent</SelectItem>
-            <SelectItem value="popular">Most Popular</SelectItem>
-            <SelectItem value="trending">Trending</SelectItem>
-            <SelectItem value="unanswered">Unanswered</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+          <TabsList>
+            <TabsTrigger value="all">All Posts</TabsTrigger>
+            <TabsTrigger value="discussion">Discussions</TabsTrigger>
+            <TabsTrigger value="question">Questions</TabsTrigger>
+            <TabsTrigger value="story">Stories</TabsTrigger>
+          </TabsList>
+        </Tabs>
 
-      {loading && (
-        <div className="text-center py-8 text-muted-foreground">
-          Loading posts...
+        <div className="flex items-center gap-4">
+          <Select
+            value={sortOption}
+            onValueChange={(value) => setSortOption(value as SortOption)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recent">Most Recent</SelectItem>
+              <SelectItem value="popular">Most Popular</SelectItem>
+              <SelectItem value="trending">Trending</SelectItem>
+              <SelectItem value="unanswered">Unanswered</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-      )}
 
-      {error && (
-        <div className="text-center py-8 text-destructive">
-          Error loading posts: {error.message}
-        </div>
-      )}
+        {loading && (
+          <div className="text-center py-8 text-muted-foreground">
+            Loading posts...
+          </div>
+        )}
 
-      {!loading && !error && posts.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground">
-          No posts yet. Be the first to create one!
-        </div>
-      )}
+        {error && (
+          <div className="text-center py-8 text-destructive">
+            Error loading posts: {error.message}
+          </div>
+        )}
 
-      {!loading && !error && posts.length > 0 && (
-        <div className="space-y-4">
-          {posts.map((post) => (
-            <ForumCard key={post.id} post={post} />
-          ))}
-        </div>
-      )}
+        {!loading && !error && posts.length === 0 && (
+          <div className="text-center py-8 text-muted-foreground">
+            No posts yet. Be the first to create one!
+          </div>
+        )}
+
+        {!loading && !error && posts.length > 0 && (
+          <div className="space-y-4">
+            {posts.map((post) => (
+              <ForumCard key={post.id} post={post} />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

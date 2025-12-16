@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { MessageCircle, Minus, Send, X } from "lucide-react";
-import { db } from "../firebase/config";
-import { useAuth } from "@/context/AuthContext";
+import { useEffect, useRef, useState } from 'react';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { MessageCircle, Minus, Send, X } from 'lucide-react';
+import { db } from '../firebase/config';
+import { useAuth } from '@/context/AuthContext';
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
@@ -33,7 +33,7 @@ Secret answer:
 Please provide helpful, concise yet short answers. Be friendly and guide users to the appropriate sections of the platform when needed.`;
 
 interface ChatMessage {
-  sender: "user" | "assistant";
+  sender: 'user' | 'assistant';
   text: string;
   timestamp: number;
 }
@@ -43,18 +43,18 @@ export default function VirtualAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>([]);
   const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState("");
-  const [input, setInput] = useState("");
+  const [username, setUsername] = useState('');
+  const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   useEffect(() => {
     if (!user) return;
     const loadData = async () => {
-      const userRef = doc(db, "users", user.uid);
+      const userRef = doc(db, 'users', user.uid);
       const docSnap = await getDoc(userRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -69,7 +69,7 @@ export default function VirtualAssistant() {
 
   const saveMessages = async (updatedMessages: Array<ChatMessage>) => {
     if (!user) return;
-    const userRef = doc(db, "users", user.uid);
+    const userRef = doc(db, 'users', user.uid);
     await setDoc(userRef, { assistantChat: updatedMessages }, { merge: true });
   };
 
@@ -77,18 +77,25 @@ export default function VirtualAssistant() {
     if (!prompt.trim()) return;
 
     setLoading(true);
-    setInput("");
+    setInput('');
 
-    const userMessage: ChatMessage = { sender: "user", text: prompt, timestamp: Date.now() };
+    const userMessage: ChatMessage = {
+      sender: 'user',
+      text: prompt,
+      timestamp: Date.now(),
+    };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
       const conversationHistory = updatedMessages
         .slice(-6)
-        .map(msg => `${msg.sender === "user" ? "User" : "Assistant"}: ${msg.text}`)
-        .join("\n");
+        .map(
+          (msg) =>
+            `${msg.sender === 'user' ? 'User' : 'Assistant'}: ${msg.text}`,
+        )
+        .join('\n');
 
       const fullPrompt = `${SYSTEM_CONTEXT}
 
@@ -100,14 +107,18 @@ Please respond to the user's latest message.`;
       const result = await model.generateContent(fullPrompt);
       const reply = result.response.text();
 
-      const assistantMessage: ChatMessage = { sender: "assistant", text: reply, timestamp: Date.now() };
+      const assistantMessage: ChatMessage = {
+        sender: 'assistant',
+        text: reply,
+        timestamp: Date.now(),
+      };
       const finalMessages = [...updatedMessages, assistantMessage];
       setMessages(finalMessages);
       await saveMessages(finalMessages);
     } catch (error) {
-      console.error("Gemini API error:", error);
+      console.error('Gemini API error:', error);
       const errorMessage: ChatMessage = {
-        sender: "assistant",
+        sender: 'assistant',
         text: "Sorry, I'm having trouble connecting right now. Please try again later.",
         timestamp: Date.now(),
       };
@@ -120,7 +131,7 @@ Please respond to the user's latest message.`;
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handlePrompt(input);
     }
@@ -143,12 +154,18 @@ Please respond to the user's latest message.`;
       {isOpen && (
         <div className="w-80 h-[32rem] bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-200">
           <div className="flex justify-between items-center bg-[#00244E] text-white px-4 py-3 rounded-t-2xl">
-            <span className="font-semibold">Hi {username || "there"} 👋</span>
+            <span className="font-semibold">Hi {username || 'there'} 👋</span>
             <div className="flex gap-2">
-              <button onClick={() => setIsOpen(false)} className="hover:opacity-80 transition">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="hover:opacity-80 transition"
+              >
                 <Minus size={18} />
               </button>
-              <button onClick={() => setIsOpen(false)} className="hover:opacity-80 transition">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="hover:opacity-80 transition"
+              >
                 <X size={18} />
               </button>
             </div>
@@ -161,10 +178,15 @@ Please respond to the user's latest message.`;
               </div>
             )}
             {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                key={i}
+                className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
                 <div
                   className={`p-3 rounded-lg max-w-[85%] ${
-                    msg.sender === "user" ? "bg-[#FF7900] text-white rounded-br-none" : "bg-gray-200 text-gray-800 rounded-bl-none"
+                    msg.sender === 'user'
+                      ? 'bg-[#FF7900] text-white rounded-br-none'
+                      : 'bg-gray-200 text-gray-800 rounded-bl-none'
                   }`}
                 >
                   <div className="text-sm whitespace-pre-wrap">{msg.text}</div>
@@ -176,8 +198,18 @@ Please respond to the user's latest message.`;
                 <div className="bg-gray-200 text-gray-600 p-3 rounded-lg rounded-bl-none text-sm">
                   <span className="inline-flex gap-1">
                     <span className="animate-bounce">●</span>
-                    <span className="animate-bounce" style={{ animationDelay: "0.1s" }}>●</span>
-                    <span className="animate-bounce" style={{ animationDelay: "0.2s" }}>●</span>
+                    <span
+                      className="animate-bounce"
+                      style={{ animationDelay: '0.1s' }}
+                    >
+                      ●
+                    </span>
+                    <span
+                      className="animate-bounce"
+                      style={{ animationDelay: '0.2s' }}
+                    >
+                      ●
+                    </span>
                   </span>
                 </div>
               </div>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-  
   Timestamp,
   addDoc,
   collection,
@@ -8,9 +7,9 @@ import {
   onSnapshot,
   orderBy,
   query,
-  where
+  where,
 } from 'firebase/firestore';
-import type {QueryConstraint} from 'firebase/firestore';
+import type { QueryConstraint } from 'firebase/firestore';
 import type { ForumPost } from '@/types/forums';
 import { db } from '@/firebase/config';
 
@@ -38,9 +37,7 @@ export function useForumPosts(
         question: 'Question',
         story: 'Story',
       };
-      constraints.push(
-        where('category', '==', categoryMap[categoryFilter]),
-      );
+      constraints.push(where('category', '==', categoryMap[categoryFilter]));
     }
 
     // Add sorting
