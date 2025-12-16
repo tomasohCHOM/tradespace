@@ -61,6 +61,22 @@ service cloud.firestore {
         && resource.data.sellerId == request.auth.uid;
     }
 
+    // forum posts collection
+    match /forumPosts/{postId} {
+      // members can read posts from their tradespaces
+      allow read: if isSignedIn()
+        && isTradespaceMember(resource.data.tradespaceId);
+
+      // members can create posts in their tradespaces
+      allow create: if isSignedIn()
+        && isTradespaceMember(request.resource.data.tradespaceId)
+        && request.resource.data.authorId == request.auth.uid;
+
+      // only the author can update/delete their own posts
+      allow update, delete: if isSignedIn()
+        && resource.data.authorId == request.auth.uid;
+    }
+
     // default deny
     match /{document=**} {
       allow read, write: if false;
