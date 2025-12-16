@@ -1,0 +1,76 @@
+import type { ForumPost } from '@/types/forums';
+
+export const mockPosts: Array<ForumPost> = [
+  {
+    id: '1',
+    title: 'Best practices for pricing vintage items?',
+    content:
+      "I've been collecting vintage tech for years and want to start selling some pieces. What are your go-to strategies for pricing?",
+    author: 'VintageCollector',
+    authorInitials: 'VC',
+    timestamp: '2 hours ago',
+    replies: 23,
+    views: 456,
+    likes: 15,
+    isPinned: true,
+    tags: ['Pricing', 'Tips'],
+    category: 'Discussion',
+  },
+  {
+    id: '2',
+    title: "Trade offer etiquette - what's acceptable?",
+    content:
+      'New to the platform and wondering what the community standards are for making trade offers...',
+    author: 'NewTrader2024',
+    authorInitials: 'NT',
+    timestamp: '5 hours ago',
+    replies: 34,
+    views: 892,
+    likes: 28,
+    tags: ['Guidelines', 'Community'],
+    category: 'Question',
+  },
+  {
+    id: '3',
+    title: 'Successfully completed my first trade!',
+    content:
+      'Just wanted to share that I completed my first trade on the platform. The experience was smooth and the seller was great!',
+    author: 'HappyBuyer',
+    authorInitials: 'HB',
+    timestamp: '8 hours ago',
+    replies: 12,
+    views: 234,
+    likes: 45,
+    tags: ['Success Story'],
+    category: 'Story',
+  },
+  {
+    id: '4',
+    title: 'How to verify product authenticity?',
+    content:
+      "I'm interested in purchasing some high-end items. What are the best ways to verify authenticity before completing a purchase?",
+    author: 'CarefulBuyer',
+    authorInitials: 'CB',
+    timestamp: '1 day ago',
+    replies: 18,
+    views: 567,
+    likes: 22,
+    tags: ['Safety', 'Verification'],
+    category: 'Question',
+  },
+  {
+    id: '5',
+    title: 'Weekly marketplace trends - November 2025',
+    content:
+      "Here's a breakdown of trending items and price movements this week...",
+    author: 'MarketAnalyst',
+    authorInitials: 'MA',
+    timestamp: '2 days ago',
+    replies: 8,
+    views: 1203,
+    likes: 67,
+    isPinned: true,
+    tags: ['Trends', 'Analysis'],
+    category: 'Discussion',
+  },
+];
