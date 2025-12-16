@@ -118,7 +118,7 @@ export default function AddListingModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg w-[calc(100%-1rem)] max-h-[calc(100dvh-2rem)] overflow-hidden">
         <DialogHeader>
           <DialogTitle>List a Product</DialogTitle>
           <DialogDescription>
@@ -126,95 +126,98 @@ export default function AddListingModal({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm">
-              {error}
-            </div>
-          )}
+        <form onSubmit={handleSubmit} className="grid gap-4">
+          {/* Scrollable body */}
+          <div className="min-h-0 overflow-y-auto pr-1 space-y-4 max-h-[calc(100dvh-16rem)]">
+            {error && (
+              <div className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm">
+                {error}
+              </div>
+            )}
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Title</label>
-            <input
-              className="w-full rounded-md border px-3 py-2"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Mechanical keyboard"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Description</label>
-            <textarea
-              className="w-full rounded-md border px-3 py-2 min-h-[90px]"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add details, condition notes, what's included..."
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Price</label>
+              <label className="text-sm font-medium">Title</label>
               <input
                 className="w-full rounded-md border px-3 py-2"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="0.00"
-                inputMode="decimal"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g. Mechanical keyboard"
+                required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Condition</label>
-              <select
+              <label className="text-sm font-medium">Description</label>
+              <textarea
+                className="w-full rounded-md border px-3 py-2 min-h-[90px]"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Add details, condition notes, what's included..."
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Price</label>
+                <input
+                  className="w-full rounded-md border px-3 py-2"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="0.00"
+                  inputMode="decimal"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Condition</label>
+                <select
+                  className="w-full rounded-md border px-3 py-2"
+                  value={condition}
+                  onChange={(e) => setCondition(e.target.value)}
+                >
+                  <option>New</option>
+                  <option>Like New</option>
+                  <option>Excellent</option>
+                  <option>Used</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Image (1)</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onPickImage}
                 className="w-full rounded-md border px-3 py-2"
-                value={condition}
-                onChange={(e) => setCondition(e.target.value)}
-              >
-                <option>New</option>
-                <option>Like New</option>
-                <option>Excellent</option>
-                <option>Used</option>
-              </select>
+              />
+
+              {previewUrl && (
+                <div className="mt-2 rounded-md border p-2">
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="w-full max-h-56 object-contain rounded"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="mt-2"
+                    onClick={() => {
+                      setImageFile(null);
+                      if (previewUrl) URL.revokeObjectURL(previewUrl);
+                      setPreviewUrl(null);
+                    }}
+                  >
+                    Remove Image
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* only one image, avoid spam uploads*/}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Image (1)</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={onPickImage}
-              className="w-full rounded-md border px-3 py-2"
-            />
-
-            {previewUrl && (
-              <div className="mt-2 rounded-md border p-2">
-                <img
-                  src={previewUrl}
-                  alt="Preview"
-                  className="w-full max-h-56 object-contain rounded"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="mt-2"
-                  onClick={() => {
-                    setImageFile(null);
-                    if (previewUrl) URL.revokeObjectURL(previewUrl);
-                    setPreviewUrl(null);
-                  }}
-                >
-                  Remove Image
-                </Button>
-              </div>
-            )}
-          </div>
-
-          <DialogFooter className="gap-2">
+          {/* Sticky footer (always visible) */}
+          <DialogFooter className="gap-2 border-t pt-3">
             <Button
               type="button"
               variant="outline"
