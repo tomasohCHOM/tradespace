@@ -265,25 +265,28 @@ export default function ProductsView({
   }, [products]);
 
   return (
-    <div className="p-6 w-full max-w-none ">
+    <div className="p-4 sm:p-6 w-full max-w-none">
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
         <div>
-          <h2 className="text-2xl mb-2">Marketplace</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-xl sm:text-2xl mb-2">Marketplace</h2>
+          <p className="text-sm sm:text-base text-muted-foreground">
             Browse and list products in this tradespace
           </p>
         </div>
-        <Button className="gap-2" onClick={() => setIsAddOpen(true)}>
+        <Button
+          className="gap-2 w-full md:w-auto"
+          onClick={() => setIsAddOpen(true)}
+        >
           <Plus className="size-4" />
           List Product
         </Button>
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6">
         <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
           <SelectContent>
@@ -298,7 +301,7 @@ export default function ProductsView({
           value={condition}
           onValueChange={(v) => setCondition(v as ConditionKey)}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Condition" />
           </SelectTrigger>
           <SelectContent>
@@ -310,7 +313,7 @@ export default function ProductsView({
           </SelectContent>
         </Select>
 
-        <Button variant="outline" className="gap-2">
+        <Button variant="outline" className="gap-2 w-full sm:w-auto">
           <Filter className="size-4" />
           More Filters
         </Button>
@@ -356,7 +359,7 @@ export default function ProductsView({
       </div>
 
       {/* Products Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
           <Card className="p-6 text-muted-foreground">Loading listings…</Card>
         ) : filteredAndSorted.length === 0 ? (
@@ -392,7 +395,7 @@ export default function ProductsView({
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                   <div>
                     <p className="text-2xl text-primary">${product.price}</p>
                     <p className="text-xs text-muted-foreground">
@@ -400,10 +403,11 @@ export default function ProductsView({
                     </p>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 w-full sm:w-auto">
                     <Button
                       size="sm"
                       variant="outline"
+                      className="flex-1 sm:flex-none"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleAddToCart(product);
@@ -415,6 +419,7 @@ export default function ProductsView({
 
                     <Button
                       size="sm"
+                      className="flex-1 sm:flex-none"
                       onClick={(e) => {
                         e.stopPropagation();
                         setSelected(product);
@@ -465,7 +470,7 @@ export default function ProductsView({
           }
         }}
       >
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto flex flex-col">
           <DialogHeader>
             <DialogTitle className="text-2xl">{selected?.title}</DialogTitle>
           </DialogHeader>
@@ -495,9 +500,10 @@ export default function ProductsView({
                   )}
                 </>
               ) : (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <input
-                    className="rounded-md border px-3 py-2 w-32"
+                    type="number"
+                    className="rounded-md border px-3 py-2 w-32 min-w-[100px]"
                     value={editPrice}
                     onChange={(e) => setEditPrice(e.target.value)}
                   />
@@ -521,7 +527,7 @@ export default function ProductsView({
               <p className="text-muted-foreground">{selected?.description}</p>
             ) : (
               <textarea
-                className="w-full rounded-md border px-3 py-2"
+                className="w-full rounded-md border px-3 py-2 min-h-[100px] max-h-[200px] resize-y"
                 value={editDescription}
                 onChange={(e) => setEditDescription(e.target.value)}
               />
@@ -567,7 +573,7 @@ export default function ProductsView({
           <Separator />
 
           {/* Action Buttons */}
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             {user && selected?.sellerId && user.uid === selected.sellerId ? (
               <>
                 {!isEditing ? (
