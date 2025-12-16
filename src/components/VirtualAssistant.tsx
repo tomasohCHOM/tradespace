@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from "react";
-import { db } from "../firebase/config";
+import { useEffect, useRef, useState } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { MessageCircle, X, Minus, Send } from "lucide-react";
+import { MessageCircle, Minus, Send, X } from "lucide-react";
+import { db } from "../firebase/config";
 import { useAuth } from "@/context/AuthContext";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
@@ -41,7 +41,7 @@ interface ChatMessage {
 export default function VirtualAssistant() {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<Array<ChatMessage>>([]);
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
   const [input, setInput] = useState("");
@@ -67,7 +67,7 @@ export default function VirtualAssistant() {
     loadData();
   }, [user]);
 
-  const saveMessages = async (updatedMessages: ChatMessage[]) => {
+  const saveMessages = async (updatedMessages: Array<ChatMessage>) => {
     if (!user) return;
     const userRef = doc(db, "users", user.uid);
     await setDoc(userRef, { assistantChat: updatedMessages }, { merge: true });

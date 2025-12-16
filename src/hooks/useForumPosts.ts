@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
 import {
-  collection,
-  query,
-  where,
-  orderBy,
-  onSnapshot,
-  addDoc,
+  
   Timestamp,
-  type QueryConstraint,
+  addDoc,
+  collection,
   limit,
+  onSnapshot,
+  orderBy,
+  query,
+  where
 } from 'firebase/firestore';
-import { db } from '@/firebase/config';
+import type {QueryConstraint} from 'firebase/firestore';
 import type { ForumPost } from '@/types/forums';
+import { db } from '@/firebase/config';
 
 type SortOption = 'recent' | 'popular' | 'trending' | 'unanswered';
 type CategoryFilter = 'all' | 'discussion' | 'question' | 'story';
@@ -21,12 +22,12 @@ export function useForumPosts(
   categoryFilter: CategoryFilter = 'all',
   sortOption: SortOption = 'recent',
 ) {
-  const [posts, setPosts] = useState<ForumPost[]>([]);
+  const [posts, setPosts] = useState<Array<ForumPost>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const constraints: QueryConstraint[] = [
+    const constraints: Array<QueryConstraint> = [
       where('tradespaceId', '==', tradespaceId),
     ];
 
@@ -38,7 +39,7 @@ export function useForumPosts(
         story: 'Story',
       };
       constraints.push(
-        where('category', '==', categoryMap[categoryFilter as keyof typeof categoryMap]),
+        where('category', '==', categoryMap[categoryFilter]),
       );
     }
 
@@ -69,7 +70,7 @@ export function useForumPosts(
         const postsData = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        })) as ForumPost[];
+        })) as Array<ForumPost>;
         setPosts(postsData);
         setLoading(false);
       },
