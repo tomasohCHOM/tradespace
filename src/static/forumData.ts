@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 import type { ForumPost } from '@/types/forums';
 
-export const mockPosts: ForumPost[] = [
+export const mockPosts: Array<ForumPost> = [
   {
     id: '1',
     title: 'Best practices for pricing vintage items?',
