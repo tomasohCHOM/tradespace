@@ -20,3 +20,22 @@ export async function createUserProfile(
     });
   }
 }
+
+export async function updateUserProfile(
+  uid: string,
+  data: Partial<{
+    firstName: string;
+    lastName: string;
+    email: string;
+    photoURL: string;
+  }>,
+) {
+  const userRef = doc(db, 'users', uid);
+  await setDoc(userRef, data, { merge: true });
+}
+
+export async function deleteUserProfile(uid: string) {
+  const { deleteDoc } = await import('firebase/firestore');
+  const userRef = doc(db, 'users', uid);
+  await deleteDoc(userRef);
+}

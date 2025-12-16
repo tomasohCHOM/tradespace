@@ -18,21 +18,30 @@ export const UserOptions: React.FC = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer w-8 h-8">
-          <AvatarImage src="" alt="" />
-          <AvatarFallback className="text-xs">TO</AvatarFallback>
+          <AvatarImage
+            src={user?.photoURL || ''}
+            alt={user?.displayName || 'User Avatar'}
+          />
+          <AvatarFallback className="text-xs">
+            {user?.displayName?.charAt(0) || user?.email?.charAt(0) || 'U'}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel>{user?.email || 'User'}</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          {user?.displayName || user?.email || 'User'}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer transition justify-between">
           <span>Dashboard</span>
-          <Home />
+          <Home className="w-4 h-4" />
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer transition justify-between">
-          <span>My Profile</span>
-          <User />
-        </DropdownMenuItem>
+        <a href="/settings">
+          <DropdownMenuItem className="cursor-pointer transition justify-between">
+            <span>Settings</span>
+            <User className="w-4 h-4" />
+          </DropdownMenuItem>
+        </a>
         <DropdownMenuItem
           className="cursor-pointer transition justify-between"
           onClick={logout}

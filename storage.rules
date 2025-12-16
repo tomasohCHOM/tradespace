@@ -17,6 +17,12 @@ service firebase.storage {
         && request.resource.size < 10 * 1024 * 1024 // limit 10MB
         && request.resource.contentType.matches('image/.*');
     }
+    
+    // Avatars specific rule
+    match /avatars/{userId}/{allPaths=**} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.auth.uid == userId;
+    }
 
     match /{folder}/{userId}/{allPaths=**} {
       allow read: if isSignedIn();
