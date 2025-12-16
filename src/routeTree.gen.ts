@@ -13,6 +13,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthSettingsRouteImport } from './routes/_auth/settings'
 import { Route as AuthSearchRouteImport } from './routes/_auth/search'
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
 import { Route as AuthCartRouteImport } from './routes/_auth/cart'
@@ -40,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthSettingsRoute = AuthSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthSearchRoute = AuthSearchRouteImport.update({
   id: '/search',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof AuthCartRoute
   '/dashboard': typeof AuthDashboardRoute
   '/search': typeof AuthSearchRoute
+  '/settings': typeof AuthSettingsRoute
   '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
   '/tradespaces/$tradespaceId/forums': typeof AuthTradespacesTradespaceIdForumsRoute
   '/tradespaces/$tradespaceId/products': typeof AuthTradespacesTradespaceIdProductsRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/cart': typeof AuthCartRoute
   '/dashboard': typeof AuthDashboardRoute
   '/search': typeof AuthSearchRoute
+  '/settings': typeof AuthSettingsRoute
   '/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
   '/tradespaces/$tradespaceId/forums': typeof AuthTradespacesTradespaceIdForumsRoute
   '/tradespaces/$tradespaceId/products': typeof AuthTradespacesTradespaceIdProductsRoute
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/_auth/cart': typeof AuthCartRoute
   '/_auth/dashboard': typeof AuthDashboardRoute
   '/_auth/search': typeof AuthSearchRoute
+  '/_auth/settings': typeof AuthSettingsRoute
   '/_auth/tradespaces/$tradespaceId': typeof AuthTradespacesTradespaceIdRouteRouteWithChildren
   '/_auth/tradespaces/$tradespaceId/forums': typeof AuthTradespacesTradespaceIdForumsRoute
   '/_auth/tradespaces/$tradespaceId/products': typeof AuthTradespacesTradespaceIdProductsRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/dashboard'
     | '/search'
+    | '/settings'
     | '/tradespaces/$tradespaceId'
     | '/tradespaces/$tradespaceId/forums'
     | '/tradespaces/$tradespaceId/products'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/dashboard'
     | '/search'
+    | '/settings'
     | '/tradespaces/$tradespaceId'
     | '/tradespaces/$tradespaceId/forums'
     | '/tradespaces/$tradespaceId/products'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/_auth/cart'
     | '/_auth/dashboard'
     | '/_auth/search'
+    | '/_auth/settings'
     | '/_auth/tradespaces/$tradespaceId'
     | '/_auth/tradespaces/$tradespaceId/forums'
     | '/_auth/tradespaces/$tradespaceId/products'
@@ -206,6 +218,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_auth/settings': {
+      id: '/_auth/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthSettingsRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/search': {
       id: '/_auth/search'
@@ -304,6 +323,7 @@ interface AuthRouteRouteChildren {
   AuthCartRoute: typeof AuthCartRoute
   AuthDashboardRoute: typeof AuthDashboardRoute
   AuthSearchRoute: typeof AuthSearchRoute
+  AuthSettingsRoute: typeof AuthSettingsRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
@@ -311,6 +331,7 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthCartRoute: AuthCartRoute,
   AuthDashboardRoute: AuthDashboardRoute,
   AuthSearchRoute: AuthSearchRoute,
+  AuthSettingsRoute: AuthSettingsRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
