@@ -274,7 +274,10 @@ export default function ProductsView({
             Browse and list products in this tradespace
           </p>
         </div>
-        <Button className="gap-2 w-full md:w-auto" onClick={() => setIsAddOpen(true)}>
+        <Button
+          className="gap-2 w-full md:w-auto"
+          onClick={() => setIsAddOpen(true)}
+        >
           <Plus className="size-4" />
           List Product
         </Button>
