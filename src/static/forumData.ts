@@ -75,7 +75,9 @@ export const mockPosts: Array<ForumPost> = [
     author: 'MarketAnalyst',
     authorId: 'user5',
     authorInitials: 'MA',
-    createdAt: Timestamp.fromDate(new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)), // 2 days ago
+    createdAt: Timestamp.fromDate(
+      new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    ), // 2 days ago
     replies: 8,
     views: 1203,
     likes: 67,
