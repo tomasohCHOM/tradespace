@@ -93,29 +93,27 @@ const TradespaceSection: React.FC<TradespaceSectionProps> = ({
     !!matchRoute({ to: topicsTo, params: { tradespaceId: tradespace.id } });
 
   return (
-    <SidebarGroup className="gap-1">
-      <SidebarGroupLabel>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors ${
-            isAnyChildActive
-              ? 'bg-accent text-accent-foreground'
-              : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
+    <>
+      <SidebarMenuButton
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full flex items-center gap-2 rounded-md text-sm transition-colors ${
+          isAnyChildActive
+            ? 'font-medium'
+            : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
+        }`}
+      >
+        <ChevronRight
+          className={`size-4 text-muted-foreground transition-transform duration-200 ${
+            isOpen ? 'rotate-90' : 'rotate-0'
           }`}
-        >
-          <ChevronRight
-            className={`size-4 text-muted-foreground transition-transform duration-200 ${
-              isOpen ? 'rotate-90' : 'rotate-0'
-            }`}
-          />
-          {/* tradespace name */}
-          <span className="flex-1 text-left">{tradespace.name}</span>
-        </button>
-      </SidebarGroupLabel>
+        />
+        {/* tradespace name */}
+        <span className="text-left">{tradespace.name}</span>
+      </SidebarMenuButton>
 
       {isOpen && (
         <SidebarGroupContent>
-          <SidebarMenu className="gap-1 ml-2">
+          <SidebarMenu className="pl-2 gap-1">
             {/* Products */}
             <SidebarMenuItem>
               <SidebarMenuButton
@@ -175,7 +173,7 @@ const TradespaceSection: React.FC<TradespaceSectionProps> = ({
           </SidebarMenu>
         </SidebarGroupContent>
       )}
-    </SidebarGroup>
+    </>
   );
 };
 
@@ -198,7 +196,7 @@ export const LayoutSidebar: React.FC<Props> = ({ tradespaces }) => {
 
   return (
     <Sidebar className="top-[50px]">
-      <SidebarContent className="pt-4 px-2">
+      <SidebarContent className="pt-4">
         <SidebarNavSection items={mainNavItems} matchRoute={matchRoute} />
 
         {tradespaces.length > 0 && (
