@@ -34,15 +34,20 @@ export const LayoutNavbar: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2 md:gap-6">
-          <Link to={cartTo} className="relative inline-flex items-center">
-            <ShoppingBag className="size-5" />
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 text-xs rounded-full px-2 py-0.5 bg-primary text-primary-foreground">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-
+          <Button className="w-8 h-8 rounded-full" size="icon" variant="ghost">
+            <Link to={cartTo} className="relative inline-flex items-center">
+              <ShoppingBag />
+              {cartCount > 0 && (
+                <span
+                  className="absolute -top-2 -right-2 flex h-4 w-4 items-center
+                  justify-center rounded-full bg-primary text-[0.5rem]
+                  text-primary-foreground"
+                >
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          </Button>
           <Button className="w-8 h-8 rounded-full" size="icon" variant="ghost">
             <Mail />
           </Button>
