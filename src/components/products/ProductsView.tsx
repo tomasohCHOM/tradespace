@@ -470,20 +470,20 @@ export default function ProductsView({
           }
         }}
       >
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto flex flex-col">
+        <DialogContent className="max-w-3xl max-h-[90dvh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl">{selected?.title}</DialogTitle>
           </DialogHeader>
 
           {/* Product Image */}
-          <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+          <div className="w-full bg-muted rounded-lg overflow-hidden flex items-center justify-center">
             <ImageWithFallback
               src={
                 (selected?.imageUrls && selected.imageUrls[0]) ||
                 selected?.imageUrl
               }
               alt={selected?.title || ''}
-              className="w-full h-full object-cover"
+              className="w-full max-h-[45dvh] object-contain"
             />
           </div>
 
