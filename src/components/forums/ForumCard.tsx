@@ -9,6 +9,28 @@ type Props = {
   post: ForumPost;
 };
 
+function formatTimestamp(timestamp: { seconds: number; nanoseconds: number }) {
+  const now = Date.now();
+  const postTime = timestamp.seconds * 1000;
+  const diff = now - postTime;
+
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  if (minutes < 60) {
+    return minutes <= 1 ? '1 minute ago' : `${minutes} minutes ago`;
+  }
+  if (hours < 24) {
+    return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+  }
+  if (days < 7) {
+    return days === 1 ? '1 day ago' : `${days} days ago`;
+  }
+
+  return new Date(postTime).toLocaleDateString();
+}
+
 export const ForumCard: React.FC<Props> = ({ post }) => {
   return (
     <Card
@@ -38,7 +60,7 @@ export const ForumCard: React.FC<Props> = ({ post }) => {
           <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
             <span>Posted by {post.author}</span>
             <span>•</span>
-            <span>{post.timestamp}</span>
+            <span>{formatTimestamp(post.createdAt)}</span>
           </div>
 
           <div className="flex items-center justify-between">
