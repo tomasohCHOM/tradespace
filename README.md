@@ -1,305 +1,123 @@
-Welcome to your new TanStack app!
+# TradeSpace
+tradespace-491.web.app/
+**TradeSpace** is a community-focused platform designed to make buying, selling, and trading items with other people simple and accessible.
 
-# Getting Started
+The goal of TradeSpace is to create a space where users can discover items, connect with other members, and participate in a community-driven marketplace. Rather than focusing solely on traditional buying and selling, the platform is built around the idea of **trading and exchanging value within a community**.
 
-To run this application:
+(TradeSpace was a senior project for students in their last year for the Computer Science department in CSUF).
+## What It Does
 
-```bash
-npm install
-npm run start
+TradeSpace provides a marketplace experience where users can:
+
+* Browse available items and trades
+* Create and manage their own listings
+* Connect with other users through shared tradespaces
+* Join and leave different tradespaces
+* Manage items and potential trades
+* Organize marketplace activity through user-specific spaces
+* Authenticate and manage accounts through Firebase
+
+The application is structured around the concept of **Tradespaces** — individual communities or collections where users can participate in buying, selling, and trading.
+
+## Tech Stack
+
+TradeSpace is built using modern web technologies:
+
+* **React** — Frontend UI
+* **TypeScript** — Type-safe application development
+* **Vite** — Development server and build tooling
+* **TanStack Router** — File-based client-side routing
+* **TanStack Query** — Data fetching and state management
+* **Firebase** — Authentication, database, and storage services
+* **Tailwind CSS** — Styling and responsive UI
+* **Radix UI** — Accessible interface components
+* **Lucide React** — Icons
+* **Vitest** — Testing
+* **Playwright** — End-to-end testing
+* **ESLint & Prettier** — Code quality and formatting
+
+The repository uses a modular structure with dedicated API, component, context, Firebase, routing, state, and utility directories.
+
+
+## Project Structure
+
+A simplified overview of the project structure:
+
+```text
+tradespace/
+├── e2e/                  # End-to-end tests
+├── public/               # Static assets
+├── src/
+│   ├── api/              # Application API functions
+│   ├── components/       # Reusable React components
+│   ├── context/          # React context providers
+│   ├── firebase/         # Firebase configuration and services
+│   ├── hooks/            # Custom React hooks
+│   ├── images/           # Application images
+│   ├── integrations/     # Third-party integrations
+│   ├── lib/              # Shared libraries and helpers
+│   ├── routes/           # Application routes
+│   ├── static/           # Static application data
+│   ├── store/            # Application state
+│   ├── types/            # TypeScript types
+│   ├── utils/            # Utility functions
+│   └── main.tsx          # Application entry point
+├── .envexample           # Environment variable template
+├── firebase.json         # Firebase configuration
+├── firestore.rules       # Firestore security rules
+├── storage.rules         # Firebase Storage rules
+├── package.json
+└── vite.config.ts
 ```
 
-# Building For Production
-
-To build this application for production:
-
-```bash
-npm run build
-```
-
-## Testing
-
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
-
-```bash
-npm run test
-```
-
-## Styling
-
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-## Linting & Formatting
-
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
-
-```bash
-npm run lint
-npm run format
-npm run check
-```
-
-## Shadcn
-
-Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
-
-```bash
-pnpx shadcn@latest add button
-```
+The API layer includes functionality for creating, retrieving, joining, and leaving Tradespaces, as well as managing trade-related data.
 
 ## Routing
 
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
+TradeSpace uses **TanStack Router** with file-based routing.
 
-### Adding A Route
+Routes are located in:
 
-To add a new route to your application just add another a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from '@tanstack/react-router';
+```text
+src/routes/
 ```
 
-Then anywhere in your JSX you can use it like so:
+Adding a route to this directory allows TanStack Router to incorporate it into the application's route tree.
 
-```tsx
-<Link to="/about">About</Link>
-```
+## Development Workflow
 
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-
-import { Link } from '@tanstack/react-router';
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
-
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/people',
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people');
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
-});
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
+A typical development workflow is:
 
 ```bash
-npm install @tanstack/react-query @tanstack/react-query-devtools
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+
+# Make changes...
+
+# Check linting
+npm run lint
+
+# Check formatting
+npm run format
+
+# Run end-to-end tests
+npm run e2e
+
+# Verify the production build
+npm run build
 ```
 
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
+## Why TradeSpace?
 
-```tsx
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+Traditional online marketplaces are primarily built around exchanging goods for money. TradeSpace explores a more community-oriented approach, where users can create spaces around shared interests and exchange items with one another.
 
-// ...
+The project is ultimately about making local and online communities more connected through **trading, sharing, and exchanging value**.
 
-const queryClient = new QueryClient();
+---
 
-// ...
+**TradeSpace**
+*A community marketplace built around people, not just transactions.*
 
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>,
-  );
-}
-```
-
-You can also add TanStack Query Devtools to the root route (optional).
-
-```tsx
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
-
-Now you can use `useQuery` to fetch your data.
-
-```tsx
-import { useQuery } from '@tanstack/react-query';
-
-import './App.css';
-
-function App() {
-  const { data } = useQuery({
-    queryKey: ['people'],
-    queryFn: () =>
-      fetch('https://swapi.dev/api/people')
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
-
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default App;
-```
-
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
-
-## State Management
-
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
-
-First you need to add TanStack Store as a dependency:
-
-```bash
-npm install @tanstack/store
-```
-
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
-
-```tsx
-import { useStore } from '@tanstack/react-store';
-import { Store } from '@tanstack/store';
-import './App.css';
-
-const countStore = new Store(0);
-
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
-
-Let's check this out by doubling the count using derived state.
-
-```tsx
-import { useStore } from '@tanstack/react-store';
-import { Store, Derived } from '@tanstack/store';
-import './App.css';
-
-const countStore = new Store(0);
-
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
-
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
-
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
-
-export default App;
-```
-
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
